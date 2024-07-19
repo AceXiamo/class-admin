@@ -1,5 +1,26 @@
 <template>
     <el-card>
+        <!-- <div style="display: flex; justify-content:center;">
+            <div style="margin: 10px; width: 48%;">
+                <div style="display: flex; align-items: center; margin: 8px;">
+                    <div style="margin-right: 8px;">综合得分榜</div>
+                </div>
+                <div class="fold-table" :style="{height: showAll || arr.length < 5 ?'auto':'200px'}">
+                    <el-table v-loading="averageScoreListLoading" :data="arr" border>
+                    <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
+                    <el-table-column prop="averageScore" label="总分" header-align="center"
+                        align="center"></el-table-column>
+                    <el-table-column prop="recommenderNum" label="引荐" header-align="center"
+                        align="center"></el-table-column>
+                    <el-table-column prop="guestNum" label="嘉宾" header-align="center" align="center"></el-table-column>
+                    <el-table-column prop="visitNum" label="走访" header-align="center" align="center"></el-table-column>
+                    <el-table-column prop="attendance" label="出勤" header-align="center"
+                        align="center"></el-table-column>
+                    </el-table>
+                </div>
+                <div v-if="arr.length > 5" class="ctrl-btn" @click="showAll = !showAll">{{ showAll ? '收起' : '展开全部' }} <el-icon><ArrowUp v-if="showAll" /> <ArrowDown v-else /></el-icon></div>
+            </div>
+        </div> -->
         <div style="display: flex; justify-content:center;">
             <div style="margin: 10px; width: 48%;">
                 <div style="display: flex; align-items: center; margin: 8px;">
@@ -9,19 +30,22 @@
                         @change="handleAverageScoreListTime">
                     </el-date-picker>
                 </div>
-                <el-table v-loading="averageScoreListLoading" :data="averageScoreList" border>
-                    <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
-                    <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
-                    <!-- <el-table-column prop="score" label="得分" header-align="center" align="center"></el-table-column> -->
-                    <el-table-column prop="averageScore" label="总分" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="recommenderNum" label="引荐" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="guestNum" label="嘉宾" header-align="center" align="center"></el-table-column>
-                    <el-table-column prop="visitNum" label="走访" header-align="center" align="center"></el-table-column>
-                    <el-table-column prop="attendance" label="出勤" header-align="center"
-                        align="center"></el-table-column>
-                </el-table>
+                <div class="fold-table" :style="{height: averageScoreShowAll || averageScoreList.length < 5 ?'auto':'200px'}">
+                    <el-table v-loading="averageScoreListLoading" :data="averageScoreList" border>
+                        <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
+                        <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
+                        <!-- <el-table-column prop="score" label="得分" header-align="center" align="center"></el-table-column> -->
+                        <el-table-column prop="averageScore" label="总分" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="recommenderNum" label="引荐" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="guestNum" label="嘉宾" header-align="center" align="center"></el-table-column>
+                        <el-table-column prop="visitNum" label="走访" header-align="center" align="center"></el-table-column>
+                        <el-table-column prop="attendance" label="出勤" header-align="center"
+                            align="center"></el-table-column>
+                    </el-table>
+                </div>
+                <div v-if="averageScoreList.length > 5" class="ctrl-btn" @click="averageScoreShowAll = !averageScoreShowAll">{{ averageScoreShowAll ? '收起' : '展开全部' }} <el-icon><ArrowUp v-if="averageScoreShowAll" /> <ArrowDown v-else /></el-icon></div>
             </div>
             <div style="margin: 10px; width: 48%;">
                 <div style="display: flex; align-items: center; margin: 8px;">
@@ -32,17 +56,20 @@
                         <el-option label="本届" value="2"></el-option>
                     </el-select>
                 </div>
-                <el-table v-loading="recommenderNumListLoading" :data="recommenderNumList" border>
-                    <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
-                    <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
-                    <!-- <el-table-column prop="num" label="引荐数量" header-align="center" align="center"></el-table-column> -->
-                    <el-table-column prop="totalRecommenderNum" label="总引荐" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="innerRecommenderNum" label="内部引荐" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="outerRecommenderNum" label="外部引荐" header-align="center"
-                        align="center"></el-table-column>
-                </el-table>
+                <div class="fold-table" :style="{height: recommenderNumShowAll || recommenderNumList.length < 5 ?'auto':'200px'}">
+                    <el-table v-loading="recommenderNumListLoading" :data="recommenderNumList" border>
+                        <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
+                        <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
+                        <!-- <el-table-column prop="num" label="引荐数量" header-align="center" align="center"></el-table-column> -->
+                        <el-table-column prop="totalRecommenderNum" label="总引荐" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="innerRecommenderNum" label="内部引荐" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="outerRecommenderNum" label="外部引荐" header-align="center"
+                            align="center"></el-table-column>
+                    </el-table>
+                </div>
+                <div v-if="recommenderNumList.length > 5" class="ctrl-btn" @click="recommenderNumShowAll = !recommenderNumShowAll">{{ recommenderNumShowAll ? '收起' : '展开全部' }} <el-icon><ArrowUp v-if="recommenderNumShowAll" /> <ArrowDown v-else /></el-icon></div>
             </div>
         </div>
 
@@ -56,16 +83,19 @@
                         <el-option label="本届" value="2"></el-option>
                     </el-select>
                 </div>
-                <el-table v-loading="recommenderMoneyListLoading" :data="recommenderMoneyList" border>
-                    <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
-                    <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
-                    <el-table-column prop="totalRecommenderMoney" label="总成交金额" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="innerRecommenderMoney" label="内部成交金额" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="outerRecommenderMoney" label="外部成交金额" header-align="center"
-                        align="center"></el-table-column>
-                </el-table>
+                <div class="fold-table" :style="{height: recommenderMoneyShowAll || recommenderMoneyList.length < 5 ?'auto':'200px'}">
+                    <el-table v-loading="recommenderMoneyListLoading" :data="recommenderMoneyList" border>
+                        <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
+                        <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
+                        <el-table-column prop="totalRecommenderMoney" label="总成交金额" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="innerRecommenderMoney" label="内部成交金额" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="outerRecommenderMoney" label="外部成交金额" header-align="center"
+                            align="center"></el-table-column>
+                    </el-table>
+                </div>
+                <div v-if="recommenderMoneyList.length > 5" class="ctrl-btn" @click="recommenderMoneyShowAll = !recommenderMoneyShowAll">{{ recommenderMoneyShowAll ? '收起' : '展开全部' }} <el-icon><ArrowUp v-if="recommenderMoneyShowAll" /> <ArrowDown v-else /></el-icon></div>
             </div>
             <div style="margin: 10px;  width: 20%;">
                 <div style="display: flex; align-items: center;  margin: 8px;">
@@ -75,11 +105,14 @@
                         <el-option label="本届" value="2"></el-option>
                     </el-select>
                 </div>
-                <el-table v-loading="guestNumListLoading" :data="guestNumList" border>
-                    <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
-                    <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
-                    <el-table-column prop="guestNum" label="嘉宾数" header-align="center" align="center"></el-table-column>
-                </el-table>
+                <div class="fold-table" :style="{height: guestNumShowAll || guestNumList.length < 5 ?'auto':'200px'}">
+                    <el-table v-loading="guestNumListLoading" :data="guestNumList" border>
+                        <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
+                        <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
+                        <el-table-column prop="guestNum" label="嘉宾数" header-align="center" align="center"></el-table-column>
+                    </el-table>
+                </div>
+                <div v-if="guestNumList.length > 5" class="ctrl-btn" @click="guestNumShowAll = !guestNumShowAll">{{ guestNumShowAll ? '收起' : '展开全部' }} <el-icon><ArrowUp v-if="guestNumShowAll" /> <ArrowDown v-else /></el-icon></div>
             </div>
             <div style="margin: 10px; width: 37%;">
                 <div style="display: flex; align-items: center;  margin: 8px;">
@@ -89,16 +122,19 @@
                         <el-option label="本届" value="2"></el-option>
                     </el-select>
                 </div>
-                <el-table v-loading="visitNumListLoading" :data="visitNumList" border>
-                    <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
-                    <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
-                    <el-table-column prop="totalVisitNum" label="总走访" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="p2pVisitNum" label="点对点走访" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="groupVisitNum" label="集体走访" header-align="center"
-                        align="center"></el-table-column>
-                </el-table>
+                <div class="fold-table" :style="{height: visitNumShowAll || visitNumList.length < 5 ?'auto':'200px'}">
+                    <el-table v-loading="visitNumListLoading" :data="visitNumList" border>
+                        <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
+                        <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
+                        <el-table-column prop="totalVisitNum" label="总走访" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="p2pVisitNum" label="点对点走访" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="groupVisitNum" label="集体走访" header-align="center"
+                            align="center"></el-table-column>
+                    </el-table>
+                </div>
+                <div v-if="visitNumList.length > 5" class="ctrl-btn" @click="visitNumShowAll = !visitNumShowAll">{{ visitNumShowAll ? '收起' : '展开全部' }} <el-icon><ArrowUp v-if="visitNumShowAll" /> <ArrowDown v-else /></el-icon></div>
             </div>
         </div>
 
@@ -112,17 +148,20 @@
                         <el-option label="本届" value="2"></el-option>
                     </el-select>
                 </div>
-                <el-table v-loading="recommandedNumListLoading" :data="recommandedNumList" border>
-                    <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
-                    <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
-                    <!-- <el-table-column prop="num" label="收到引荐数量" header-align="center" align="center"></el-table-column> -->
-                    <el-table-column prop="totalRecommendedNum" label="总引荐" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="innerRecommendedNum" label="内部引荐" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="outerRecommendedNum" label="外部引荐" header-align="center"
-                        align="center"></el-table-column>
-                </el-table>
+                <div class="fold-table" :style="{height: recommandedNumShowAll || recommandedNumList.length < 5 ?'auto':'200px'}">
+                    <el-table v-loading="recommandedNumListLoading" :data="recommandedNumList" border>
+                        <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
+                        <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
+                        <!-- <el-table-column prop="num" label="收到引荐数量" header-align="center" align="center"></el-table-column> -->
+                        <el-table-column prop="totalRecommendedNum" label="总引荐" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="innerRecommendedNum" label="内部引荐" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="outerRecommendedNum" label="外部引荐" header-align="center"
+                            align="center"></el-table-column>
+                    </el-table>
+                </div>
+                <div v-if="recommandedNumList.length > 5" class="ctrl-btn" @click="recommandedNumShowAll = !recommandedNumShowAll">{{ recommandedNumShowAll ? '收起' : '展开全部' }} <el-icon><ArrowUp v-if="recommandedNumShowAll" /> <ArrowDown v-else /></el-icon></div>
             </div>
             <div style="margin: 10px;  width: 48%;">
                 <div style="display: flex; align-items: center;  margin: 8px;">
@@ -133,17 +172,20 @@
                         <el-option label="本届" value="2"></el-option>
                     </el-select>
                 </div>
-                <el-table v-loading="recommandedMoneyListLoading" :data="recommandedMoneyList" border>
-                    <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
-                    <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
-                    <!-- <el-table-column prop="money" label="收到引荐金额" header-align="center" align="center"></el-table-column> -->
-                    <el-table-column prop="totalRecommendedMoney" label="总成交金额" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="innerRecommendedMoney" label="内部成交金额" header-align="center"
-                        align="center"></el-table-column>
-                    <el-table-column prop="outerRecommendedMoney" label="外部成交金额" header-align="center"
-                        align="center"></el-table-column>
-                </el-table>
+                <div class="fold-table" :style="{height: recommandedMoneyShowAll || recommandedMoneyList.length < 5 ?'auto':'200px'}">
+                    <el-table v-loading="recommandedMoneyListLoading" :data="recommandedMoneyList" border>
+                        <!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
+                        <el-table-column prop="name" label="姓名" header-align="center" align="center"></el-table-column>
+                        <!-- <el-table-column prop="money" label="收到引荐金额" header-align="center" align="center"></el-table-column> -->
+                        <el-table-column prop="totalRecommendedMoney" label="总成交金额" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="innerRecommendedMoney" label="内部成交金额" header-align="center"
+                            align="center"></el-table-column>
+                        <el-table-column prop="outerRecommendedMoney" label="外部成交金额" header-align="center"
+                            align="center"></el-table-column>
+                    </el-table>
+                </div>
+                <div v-if="recommandedMoneyList.length > 5" class="ctrl-btn" @click="recommandedMoneyShowAll = !recommandedMoneyShowAll">{{ recommandedMoneyShowAll ? '收起' : '展开全部' }} <el-icon><ArrowUp v-if="recommandedMoneyShowAll" /> <ArrowDown v-else /></el-icon></div>
             </div>
         </div>
 
@@ -170,6 +212,7 @@ import {
     usePz_dataBoardRecommanderNumChartApi, usePz_dataBoardRecommanderMoneyChartApi,usePz_dataBoardVisitNumChartApi
 } from '@/api/module/pz_dataBoard'
 import { ElMessage } from 'element-plus';
+import { ArrowDown, ArrowUp } from '@element-plus/icons-vue';
 import { dayjs } from 'element-plus';
 import * as echarts from 'echarts'
 import { map } from 'xe-utils';
@@ -187,8 +230,20 @@ const visitNumCharts = ref()
 
 
 // 综合得分榜
+const arr = new Array(10).fill({
+    attendance: 0,
+    averageScore: 0,
+    guestNum: 0,
+    id: 0,
+    name: "微信用户",
+    recommenderNum: 0,
+    visitNum: 0,
+});
+const showAll = ref(false)
+
 const averageScoreList = ref([])
 const averageScoreListLoading = ref(false)
+const averageScoreShowAll = ref(false)
 const averageScoreListTime = ref(dayjs(new Date()).format("YYYY-MM"))
 const getAverageScoreList = (time: any) => {
     averageScoreListLoading.value = true
@@ -209,6 +264,7 @@ const handleAverageScoreListTime = () => {
 // 给出引荐排行榜
 const recommenderNumList = ref([])
 const recommenderNumListLoading = ref(false)
+const recommenderNumShowAll = ref(false)
 const recommenderNumListOption = ref('1')
 const getRecommenderNumList = (type: any) => {
     recommenderNumListLoading.value = true
@@ -228,6 +284,7 @@ const handleRecommenderNumListOption = () => {
 // 给出引荐金额排行榜
 const recommenderMoneyList = ref([])
 const recommenderMoneyListLoading = ref(false)
+const recommenderMoneyShowAll = ref(false)
 const recommenderMoneyListOption = ref('1')
 const getRecommenderMoneyList = (type: any) => {
     recommenderMoneyListLoading.value = true
@@ -247,6 +304,7 @@ const handleRecommenderMoneyListOption = () => {
 // 邀约嘉宾排行榜
 const guestNumList = ref([])
 const guestNumListLoading = ref(false)
+const guestNumShowAll = ref(false)
 const guestNumListOption = ref('1')
 const getGuestNumList = (type: any) => {
     guestNumListLoading.value = true
@@ -266,6 +324,7 @@ const handleGuestNumListOption = () => {
 // 走访排行榜
 const visitNumList = ref([])
 const visitNumListLoading = ref(false)
+const visitNumShowAll = ref(false)
 const visitNumListOption = ref('1')
 const getVisitNumList = (type: any) => {
     visitNumListLoading.value = true
@@ -285,6 +344,7 @@ const handleVisitNumListOption = () => {
 // 收到引荐数量排行榜
 const recommandedNumList = ref([])
 const recommandedNumListLoading = ref(false)
+const recommandedNumShowAll = ref(false)
 const recommandedNumListOption = ref('1')
 const getRecommandedNumList = (type: any) => {
     recommandedNumListLoading.value = true
@@ -304,6 +364,7 @@ const handleRecommandedNumListOption = () => {
 // 收到引荐金额排行榜
 const recommandedMoneyList = ref([])
 const recommandedMoneyListLoading = ref(false)
+const recommandedMoneyShowAll = ref(false)
 const recommandedMoneyListOption = ref('1')
 const getRecommandedMoneyList = (type: any) => {
     recommandedMoneyListLoading.value = true
@@ -565,3 +626,14 @@ const initCharts = () => {
 
 
 </script>
+
+<style lang="scss">
+.fold-table {
+    overflow: hidden;
+}
+.ctrl-btn {
+    text-align: center;
+    line-height: 30px;
+    color: #999;
+}
+</style>
