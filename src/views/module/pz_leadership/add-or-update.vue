@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="visible" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false">
+	<el-dialog v-model="visible" :title="!dataForm.id ? '新增一个任期' : '修改'" :close-on-click-modal="false">
 		<el-form ref="dataFormRef" :model="dataForm" :rules="dataRules" label-width="100px" @keyup.enter="submitHandle()">
 			<!-- <el-form-item label="" prop="id">
 					<el-input v-model="dataForm.id" placeholder=""></el-input>
@@ -102,7 +102,7 @@ const init = (id?: number) => {
 	// 重置表单数据
 	if (dataFormRef.value) {
 		dataFormRef.value.resetFields()
-		leaderShips.value = [{ ...dataForm, userId: '', position: '会长', mainImg: '' }, { ...dataForm, userId: '', position: '副会长', mainImg: '' }]
+		leaderShips.value = []
 		upload.value.map((item) => item.clearFiles())
 		imageUrl.value = leaderShips.value.map(() => '')
 		fileUpload.value = leaderShips.value.map(() => null)
@@ -148,7 +148,7 @@ const handleDateChange = (value) => {
 	dateRange.value = value
 }
 
-const leaderShips = ref([{ ...dataForm, userId: '', position: '会长', mainImg: '' }, { ...dataForm, userId: '', position: '副会长', mainImg: '' }])
+const leaderShips = ref<any[]>([])
 
 // 新增领导团队成员
 const handleAddLeader = () => {
@@ -165,7 +165,7 @@ const headers = {
 // 图像回显到前端
 const imageUrl = ref(leaderShips.value.map(() => ''))
 // 图像文件
-const fileUpload = ref(leaderShips.value.map(() => null))
+const fileUpload = ref<any>(leaderShips.value.map(() => null))
 // 图像文件更换
 const handleChange = (file: any, index: number) => {
 	fileUpload.value[index] = file

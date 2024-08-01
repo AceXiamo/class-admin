@@ -5,13 +5,13 @@
 				<el-date-picker v-model="dateRange" type="daterange" range-separator="到" start-placeholder="请选择日期"
 					end-placeholder="请选择日期" @change="handleDateChange" value-format="YYYY-MM-DD HH:mm:ss"></el-date-picker>
 			</el-form-item>
-			<el-form-item label="引荐人" prop="recommenderId" style="width: 200px;">
+			<el-form-item label="搜索引荐人" prop="recommenderId" style="width: 200px;">
 				<!-- <el-input v-model="state.queryForm.recommenderId" clearable placeholder="请输入引荐人id"></el-input> -->
 				<el-select v-model="state.queryForm.recommenderId" clearable filterable placeholder="引荐人">
 					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id"/>
 				</el-select>
 			</el-form-item>
-			<el-form-item label="被引荐人" prop="recommendedId" style="width: 200px;">
+			<el-form-item label="搜索被引荐人" prop="recommendedId" style="width: 200px;">
 				<!-- <el-input v-model="state.queryForm.recommendedId" clearable placeholder="请输入被引荐人id"></el-input> -->
 				<el-select v-model="state.queryForm.recommendedId" clearable filterable placeholder="被引荐人">
 					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id"/>
@@ -24,10 +24,10 @@
 					<el-option label="全部" value=""></el-option>
 				</el-select>
 			</el-form-item>
-			<el-form-item label="成交金额" prop="amount">
-				<el-input v-model="state.queryForm.amountStart" clearable placeholder="金额起" style="width: 100px;"></el-input>
+			<el-form-item label="按引荐金额筛选" prop="amount">
+				<el-input v-model="state.queryForm.amountStart" clearable placeholder="金额" style="width: 100px;"></el-input>
 				<span style="padding-left: 10px; padding-right: 10px;"> - </span>
-				<el-input v-model="state.queryForm.amountEnd" clearable placeholder="金额终" style="width: 100px;"></el-input>
+				<el-input v-model="state.queryForm.amountEnd" clearable placeholder="金额" style="width: 100px;"></el-input>
 			</el-form-item>
 
 			<el-form-item>

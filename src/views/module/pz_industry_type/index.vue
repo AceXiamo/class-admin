@@ -1,19 +1,19 @@
 <template>
 	<el-card>
 		<el-form :inline="true" :model="state.queryForm" @keyup.enter="getDataList()">
-			<el-form-item>
+			<!-- <el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
-			</el-form-item>
+			</el-form-item> -->
 			<el-form-item>
 				<el-button v-auth="'module:pz_industry_type:save'" type="primary" @click="addOrUpdateHandle()">新增</el-button>
 			</el-form-item>
-			<el-form-item>
+			<!-- <el-form-item>
 				<el-button v-auth="'module:pz_industry_type:delete'" type="danger" @click="deleteBatchHandle()">删除</el-button>
-			</el-form-item>
+			</el-form-item> -->
 		</el-form>
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
 			<!-- <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column> -->
-			<el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column>
+			<!-- <el-table-column prop="id" label="id" header-align="center" align="center"></el-table-column> -->
 			<el-table-column prop="title" label="行业类型名称" header-align="center" align="center"></el-table-column>
 			<!-- <el-table-column prop="status" label="状态" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="createTime" label="创建时间" header-align="center" align="center"></el-table-column>

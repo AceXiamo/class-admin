@@ -156,7 +156,7 @@ const getAdList = () => {
     })
 }
 // 获取“关于我们”文本
-const aboutUs = ref('<p>pinzhi</p>')
+const aboutUs = ref('')
 const getAboutUs = () => {
     usePz_home_bannersAboutUsShowApi().then(res => {
         if (res.code == 0) {

@@ -87,7 +87,7 @@
 					<el-button v-auth="'module:pz_user_info:delete'" type="danger" link
 						@click="deleteBatchHandle(scope.row.id)">删除</el-button>
 					<el-button type="primary" link @click="userRecordHandle(scope.row.id, scope.row.name)">用户记录</el-button>
-					<el-button type="primary" v-if="scope.row.status==1" @click="userVerifyHandle(scope.row)">通过申请</el-button>
+					<el-button type="primary" v-if="scope.row.status==2" @click="userVerifyHandle(scope.row)">通过申请</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -178,7 +178,7 @@ const userVerifyHandle=(row:any)=>{
 		cancelButtonText: '取消',
 		type: 'warning'
 	}).then(() => {
-		row.status = 2
+		row.status = 3
 		row.createTime = dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss')
 		row.updateTime = dayjs(row.updateTime).format('YYYY-MM-DD HH:mm:ss')
 		let param = new FormData()

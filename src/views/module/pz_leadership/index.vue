@@ -1,12 +1,12 @@
 <template>
 	<el-card>
 		<el-form :inline="true" :model="state.queryForm" @keyup.enter="getDataList()">
-			<el-form-item>
+			<!-- <el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
-			</el-form-item>
+			</el-form-item> -->
 			<el-form-item>
 				<el-button v-auth="'module:pz_leadership:save'" type="primary"
-					@click="addOrUpdateHandle()">新增</el-button>
+					@click="addOrUpdateHandle()">新建一个任期</el-button>
 			</el-form-item>
 			<!-- <el-form-item>
 				<el-button v-auth="'module:pz_leadership:delete'" type="danger"
@@ -60,7 +60,7 @@
 			<el-button @click="weekListSubmitHandle" type="primary">修改周期算法</el-button>
 		</div>
 		<div v-for="(week, index) in weekList" style="display: flex; align-items: center; margin: 10px;">
-			<div style="margin-right: 10px;margin-left: 10px;"> {{ '第' + (index+1) + '届' }} </div>
+			<div style="margin-right: 10px;margin-left: 10px;"> {{ '第' + (index+1) + '周' }} </div>
 			<el-date-picker v-model="week.startTime" type="date" placeholder="请选择日期" />
 			<div style="margin-right: 10px;margin-left: 10px;">到</div>
 			<el-date-picker v-model="week.endTime" type="date" placeholder="请选择日期" />
@@ -97,7 +97,7 @@ const weekDataForm = reactive({
 	endTime: ''
 })
 
-const weekList = ref([])
+const weekList = ref<any[]>([])
 const getWeekList = () => {
 	usePz_leaderShipWeekApi().then((res) => {
 		weekList.value = res.data

@@ -129,7 +129,7 @@ const getPz_event = (id: number) => {
 		dataForm.guestAllowed += ''
 		dataForm.status += ''
 		dataForm.type += ''
-		imageUrl.value = res.data.mainImg + '?' + new Date().getTime()
+		imageUrl.value = res.data?.mainImg
 	})
 }
 

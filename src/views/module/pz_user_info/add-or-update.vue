@@ -8,7 +8,7 @@
 				<!-- <el-input v-model="dataForm.status" placeholder="用户角色状态"></el-input> -->
 				<el-select v-model="dataForm.status" placeholder="请选择用户角色状态">
 					<el-option label="游客" value="0"></el-option>
-					<el-option label="待验证" value="1"></el-option>
+					<!-- <el-option label="待验证" value="1"></el-option> -->
 					<el-option label="准嘉宾" value="2"></el-option>
 					<el-option label="嘉宾" value="3"></el-option>
 					<el-option label="会员" value="4"></el-option>
@@ -163,6 +163,7 @@ const init = (id?: number) => {
 		upload2.value?.clearFiles()
 		imageUrl2.value = ''
 		fileUpload2.value = null
+		userInfoList.value = [{id:0,name:'平台'}]
 	}
 
 	if (id) {
@@ -177,16 +178,16 @@ const init = (id?: number) => {
 const getPz_user_info = (id: number) => {
 	usePz_user_infoApi(id).then(res => {
 		Object.assign(dataForm, res.data)
-		imageUrl.value = res.data.avatar + '?' + new Date().getTime()
-		imageUrl2.value = res.data.wechatQrCode + '?' + new Date().getTime()
+		imageUrl.value = res.data.avatar
+		imageUrl2.value = res.data.wechatQrCode
 		dataForm.status += ''
 	})
 }
 
-const userInfoList = ref([])
+const userInfoList = ref([{id:0,name:'平台'}])
 const getPz_userInfoList = () => {
 	usePz_user_infoAllApi().then(res => {
-		userInfoList.value = res.data
+		userInfoList.value = userInfoList.value.concat(res.data)
 	})
 }
 

@@ -29,8 +29,8 @@
 			<el-form-item label="发布状态" prop="status">
 				<!-- <el-input v-model="dataForm.status" placeholder="发布状态(0未发布 1已发布)"></el-input> -->
 				<el-select v-model="dataForm.status" placeholder="请选择发布状态">
-					<el-option label="未发布" value="0"></el-option>
-					<el-option label="已发布" value="1"></el-option>
+					<el-option label="未发布" :value="0"></el-option>
+					<el-option label="已发布" :value="1"></el-option>
 				</el-select>
 			</el-form-item>
 			<el-form-item label="发布时间" prop="publishTime">
@@ -100,7 +100,7 @@ const init = (id?: number) => {
 const getPz_news = (id: number) => {
 	usePz_newsApi(id).then(res => {
 		Object.assign(dataForm, res.data)
-		imageUrl.value = res.data.mainImg + '?' + new Date().getTime()
+		imageUrl.value = res.data?.image
 	})
 }
 

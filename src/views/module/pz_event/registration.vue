@@ -1,11 +1,11 @@
 <template>
     <el-card>
-        <div style="diplay:flex;align-item: center;">
+        <div style="display:flex;align-items: center;">
             <svg-icon icon="icon-rollback" @click="router.back()" size="20px"></svg-icon>
             <span style="margin-left: 16px;">查看名单</span>
         </div>
-        <div>
-            {{ route.query.theme }}
+        <div style="font-size: 30px; margin: 20px;font-weight: bold;">
+            活动主题：{{ route.query.theme }}
         </div>
         <div>
             <el-table v-loading="registrationListLoading" :data="state.registrationList" border style="width: 100%">
@@ -70,7 +70,7 @@
 			</el-table-column> -->
             </el-table>
         </div>
-        <div>
+        <div style="margin-top: 20px;">
             <el-button type="primary" @click="confirmHandle()">录入</el-button>
             <el-button type="primary" @click="dialogVisible = true">新增会员/嘉宾</el-button>
         </div>
