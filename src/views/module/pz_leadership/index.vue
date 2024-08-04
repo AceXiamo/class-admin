@@ -5,16 +5,14 @@
 				<el-button @click="getDataList()">查询</el-button>
 			</el-form-item> -->
 			<el-form-item>
-				<el-button v-auth="'module:pz_leadership:save'" type="primary"
-					@click="addOrUpdateHandle()">新建一个任期</el-button>
+				<el-button v-auth="'module:pz_leadership:save'" type="primary" @click="addOrUpdateHandle()">新建一个任期</el-button>
 			</el-form-item>
 			<!-- <el-form-item>
 				<el-button v-auth="'module:pz_leadership:delete'" type="danger"
 					@click="deleteBatchHandle()">删除</el-button>
 			</el-form-item> -->
 		</el-form>
-		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%"
-			@selection-change="selectionChangeHandle">
+		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
 			<!-- <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
 			<el-table-column prop="id" label="" header-align="center" align="center"></el-table-column> -->
 			<!-- <el-table-column prop="userId" label="领导成员id" header-align="center" align="center"></el-table-column>
@@ -37,18 +35,21 @@
 			<el-table-column prop="updateTime" label="" header-align="center" align="center"></el-table-column> -->
 			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
 				<template #default="scope">
-					<el-button v-auth="'module:pz_leadership:update'" type="primary" link
-						@click="addOrUpdateHandle(scope.row.session)">修改</el-button>
-					<el-button v-auth="'module:pz_leadership:delete'" type="primary" link
-						@click="deleteBatchHandle(scope.row.session)">删除</el-button>
+					<el-button v-auth="'module:pz_leadership:update'" type="primary" link @click="addOrUpdateHandle(scope.row.session)">修改</el-button>
+					<el-button v-auth="'module:pz_leadership:delete'" type="primary" link @click="deleteBatchHandle(scope.row.session)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
-		<el-pagination :current-page="state.page" :page-sizes="state.pageSizes" :page-size="state.limit"
-			:total="state.total" layout="total, sizes, prev, pager, next, jumper" @size-change="sizeChangeHandle"
-			@current-change="currentChangeHandle">
+		<el-pagination
+			:current-page="state.page"
+			:page-sizes="state.pageSizes"
+			:page-size="state.limit"
+			:total="state.total"
+			layout="total, sizes, prev, pager, next, jumper"
+			@size-change="sizeChangeHandle"
+			@current-change="currentChangeHandle"
+		>
 		</el-pagination>
-
 
 		<!-- <el-table :data="weekList" style="width: 100%">
 			<el-table-column prop="id" label="id" width="180"></el-table-column>
@@ -56,17 +57,16 @@
 			<el-table-column prop="startTime" label="开始时间" width="180"></el-table-column>
 			<el-table-column prop="endTime" label="结束时间" width="180"></el-table-column>
 		</el-table> -->
-		<div style="margin: 10px;">
+		<div style="margin: 10px">
 			<el-button @click="weekListSubmitHandle" type="primary">修改周期算法</el-button>
 		</div>
-		<div v-for="(week, index) in weekList" style="display: flex; align-items: center; margin: 10px;">
-			<div style="margin-right: 10px;margin-left: 10px;"> {{ '第' + (index+1) + '周' }} </div>
+		<div v-for="(week, index) in weekList" style="display: flex; align-items: center; margin: 10px">
+			<div style="margin-right: 10px; margin-left: 10px">{{ '第' + (index + 1) + '周' }}</div>
 			<el-date-picker v-model="week.startTime" type="date" placeholder="请选择日期" />
-			<div style="margin-right: 10px;margin-left: 10px;">到</div>
+			<div style="margin-right: 10px; margin-left: 10px">到</div>
 			<el-date-picker v-model="week.endTime" type="date" placeholder="请选择日期" />
-			
 		</div>
-		<div style="margin: 10px;">
+		<div style="margin: 10px">
 			<el-button @click="weekListAddHandle" type="primary">新增一周</el-button>
 		</div>
 
@@ -82,12 +82,12 @@ import { IHooksOptions } from '@/hooks/interface'
 import AddOrUpdate from './add-or-update.vue'
 import { ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import { usePz_leaderShipWeekApi, usePz_leaderShipWeekSubmitApi } from '@/api/module/pz_leadership'
+import { cloneDeep } from 'lodash'
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/module/pz_leadership/session/page',
 	deleteUrl: '/module/pz_leadership',
-	queryForm: {
-	}
+	queryForm: {}
 })
 
 const weekDataForm = reactive({
@@ -99,12 +99,12 @@ const weekDataForm = reactive({
 
 const weekList = ref<any[]>([])
 const getWeekList = () => {
-	usePz_leaderShipWeekApi().then((res) => {
+	usePz_leaderShipWeekApi().then(res => {
 		weekList.value = res.data
 	})
 }
 
-const weekListAddHandle = ()=>{
+const weekListAddHandle = () => {
 	weekList.value.push({
 		id: '',
 		session: '',
@@ -113,20 +113,37 @@ const weekListAddHandle = ()=>{
 	})
 }
 
-const weekListSubmitHandle = ()=>{
+const weekListSubmitHandle = () => {
 	ElMessageBox.confirm('确定修改周期吗?', '提示', {
 		confirmButtonText: '确定',
 		cancelButtonText: '取消',
 		type: 'warning'
-	}).then(() => {
-		usePz_leaderShipWeekSubmitApi(weekList.value).then(() => {
-			ElMessage.success('修改成功')
-		})
-	}).catch(() => {
-		ElMessage.info('已取消修改')
 	})
+		.then(() => {
+			if (verifyWeekData()) {
+				usePz_leaderShipWeekSubmitApi(weekList.value).then(() => {
+					ElMessage.success('修改成功')
+				})
+			}
+		})
+		.catch(() => {
+			ElMessage.info('已取消修改')
+		})
 }
 
+const verifyWeekData = (): boolean => {
+	const weekListCopy = cloneDeep(weekList.value)
+	weekListCopy.sort((a, b) => {
+		return dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf()
+	})
+	for (let i = 0; i < weekListCopy.length - 1; i++) {
+		if (dayjs(weekListCopy[i].endTime).valueOf() > dayjs(weekListCopy[i + 1].startTime).valueOf()) {
+			ElMessage.error('周数据不能重叠')
+			return false
+		}
+	}
+	return true
+}
 
 onMounted(() => {
 	getWeekList()
