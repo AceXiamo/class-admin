@@ -52,6 +52,12 @@
 					<el-option label="否" value="0"></el-option>
 				</el-select>
 			</el-form-item>
+			<el-form-item label="是否跨平台" prop="isCrossPlatform">
+				<el-select v-model="dataForm.isCrossPlatform" clearable placeholder="请选择是否跨平台">
+					<el-option label="是" value="1"></el-option>
+					<el-option label="否" value="0"></el-option>
+				</el-select>
+			</el-form-item>
 			<!-- <el-form-item label="" prop="createTime">
 					<el-input v-model="dataForm.createTime" placeholder=""></el-input>
 				</el-form-item>
@@ -90,7 +96,8 @@ const dataForm = reactive({
 	comment: '',
 	status: '',
 	createTime: '',
-	updateTime: ''
+	updateTime: '',
+	isCrossPlatform: '0'
 })
 
 const userInfoList = ref([])

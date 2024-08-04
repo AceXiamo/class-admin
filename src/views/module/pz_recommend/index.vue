@@ -2,22 +2,29 @@
 	<el-card>
 		<el-form :inline="true" :model="state.queryForm" @keyup.enter="getDataList()">
 			<el-form-item label="日期筛选">
-				<el-date-picker v-model="dateRange" type="daterange" range-separator="到" start-placeholder="请选择日期"
-					end-placeholder="请选择日期" @change="handleDateChange" value-format="YYYY-MM-DD HH:mm:ss"></el-date-picker>
+				<el-date-picker
+					v-model="dateRange"
+					type="daterange"
+					range-separator="到"
+					start-placeholder="请选择日期"
+					end-placeholder="请选择日期"
+					@change="handleDateChange"
+					value-format="YYYY-MM-DD HH:mm:ss"
+				></el-date-picker>
 			</el-form-item>
-			<el-form-item label="搜索引荐人" prop="recommenderId" style="width: 200px;">
+			<el-form-item label="搜索引荐人" prop="recommenderId" style="width: 200px">
 				<!-- <el-input v-model="state.queryForm.recommenderId" clearable placeholder="请输入引荐人id"></el-input> -->
 				<el-select v-model="state.queryForm.recommenderId" clearable filterable placeholder="引荐人">
-					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id"/>
+					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id" />
 				</el-select>
 			</el-form-item>
-			<el-form-item label="搜索被引荐人" prop="recommendedId" style="width: 200px;">
+			<el-form-item label="搜索被引荐人" prop="recommendedId" style="width: 200px">
 				<!-- <el-input v-model="state.queryForm.recommendedId" clearable placeholder="请输入被引荐人id"></el-input> -->
 				<el-select v-model="state.queryForm.recommendedId" clearable filterable placeholder="被引荐人">
-					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id"/>
+					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id" />
 				</el-select>
 			</el-form-item>
-			<el-form-item label="引荐类型" prop="type" style="width: 200px;">
+			<el-form-item label="引荐类型" prop="type" style="width: 200px">
 				<el-select v-model="state.queryForm.type" clearable placeholder="请选择引荐类型">
 					<el-option label="内部引荐" value="0"></el-option>
 					<el-option label="外部引荐" value="1"></el-option>
@@ -25,9 +32,16 @@
 				</el-select>
 			</el-form-item>
 			<el-form-item label="按引荐金额筛选" prop="amount">
-				<el-input v-model="state.queryForm.amountStart" clearable placeholder="金额" style="width: 100px;"></el-input>
-				<span style="padding-left: 10px; padding-right: 10px;"> - </span>
-				<el-input v-model="state.queryForm.amountEnd" clearable placeholder="金额" style="width: 100px;"></el-input>
+				<el-input v-model="state.queryForm.amountStart" clearable placeholder="金额" style="width: 100px"></el-input>
+				<span style="padding-left: 10px; padding-right: 10px"> - </span>
+				<el-input v-model="state.queryForm.amountEnd" clearable placeholder="金额" style="width: 100px"></el-input>
+			</el-form-item>
+			<el-form-item label="是否跨平台" prop="isCrossPlatform" style="width: 200px">
+				<el-select v-model="state.queryForm.isCrossPlatform" clearable placeholder="请选择是否跨平台">
+					<el-option label="是" value="1"></el-option>
+					<el-option label="否" value="0"></el-option>
+					<el-option label="全部" value=""></el-option>
+				</el-select>
 			</el-form-item>
 
 			<el-form-item>
@@ -43,10 +57,14 @@
 				<el-button v-auth="'module:pz_recommend:delete'" type="danger" @click="deleteBatchHandle()">删除</el-button>
 			</el-form-item> -->
 		</el-form>
-		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%"
-			@selection-change="selectionChangeHandle">
+		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
 			<!-- <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
 			<el-table-column prop="id" label="" header-align="center" align="center"></el-table-column> -->
+			<el-table-column label="类型" header-align="center" align="center">
+				<template #default="{ row }">
+					{{ row.isCrossPlatform == 1 ? '跨平台' : '非跨平台' }}
+				</template>
+			</el-table-column>
 			<el-table-column prop="recommendTime" label="引荐日期" header-align="center" align="center">
 				<template #default="{ row }">
 					{{ row.recommendTime ? dayjs(row.recommendTime).format('YYYY-MM-DD') : '' }}
@@ -55,8 +73,8 @@
 			<el-table-column prop="recommenderName" label="引荐人" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="recommendedName" label="被引荐人" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="type" label="引荐类型" header-align="center" align="center">
-				<template #default="{row}">
-					{{ row.type==0?'内部引荐':'外部引荐' }}
+				<template #default="{ row }">
+					{{ row.type == 0 ? '内部引荐' : '外部引荐' }}
 				</template>
 			</el-table-column>
 			<el-table-column prop="recommendContent" label="引荐内容" header-align="center" align="center"></el-table-column>
@@ -73,16 +91,20 @@
 			<el-table-column prop="updateTime" label="" header-align="center" align="center"></el-table-column> -->
 			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
 				<template #default="scope">
-					<el-button v-auth="'module:pz_recommend:update'" type="primary" link
-						@click="addOrUpdateHandle(scope.row.id)">修改</el-button>
-					<el-button v-auth="'module:pz_recommend:delete'" type="primary" link
-						@click="deleteBatchHandle(scope.row.id)">删除</el-button>
+					<el-button v-auth="'module:pz_recommend:update'" type="primary" link @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+					<el-button v-auth="'module:pz_recommend:delete'" type="primary" link @click="deleteBatchHandle(scope.row.id)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
-		<el-pagination :current-page="state.page" :page-sizes="state.pageSizes" :page-size="state.limit"
-			:total="state.total" layout="total, sizes, prev, pager, next, jumper" @size-change="sizeChangeHandle"
-			@current-change="currentChangeHandle">
+		<el-pagination
+			:current-page="state.page"
+			:page-sizes="state.pageSizes"
+			:page-size="state.limit"
+			:total="state.total"
+			layout="total, sizes, prev, pager, next, jumper"
+			@size-change="sizeChangeHandle"
+			@current-change="currentChangeHandle"
+		>
 		</el-pagination>
 
 		<!-- 弹窗, 新增 / 修改 -->
@@ -110,12 +132,13 @@ const state: IHooksOptions = reactive({
 		type: '',
 		amountStart: '',
 		amountEnd: '',
+		isCrossPlatform: ''
 	}
 })
 
 const dateRange = ref([])
 
-const handleDateChange = (value) => {
+const handleDateChange = value => {
 	if (value === null) {
 		state.queryForm.startTime = ''
 		state.queryForm.endTime = ''
@@ -127,23 +150,35 @@ const handleDateChange = (value) => {
 }
 
 const userInfoList = ref([])
-const getPz_userInfoList=()=>{
-	usePz_user_infoAllApi().then(res=>{
+const getPz_userInfoList = () => {
+	usePz_user_infoAllApi().then(res => {
 		userInfoList.value = res.data
 	})
 }
-onMounted(()=>{
+onMounted(() => {
 	getPz_userInfoList()
 })
 
 const exportHandle = () => {
-	downloadHandle('/module/pz_recommend/export?startTime='+(state.queryForm.startTime?state.queryForm.startTime:'')+'&endTime='
-	+(state.queryForm.endTime?state.queryForm.endTime:'')+'&recommenderId='+state.queryForm.recommenderId+'&recommendedId='+state.queryForm.recommendedId
-	+'&type='+state.queryForm.type+'&amountStart='+state.queryForm.amountStart+'&amountEnd='+state.queryForm.amountEnd).then(()=>{
+	downloadHandle(
+		'/module/pz_recommend/export?startTime=' +
+			(state.queryForm.startTime ? state.queryForm.startTime : '') +
+			'&endTime=' +
+			(state.queryForm.endTime ? state.queryForm.endTime : '') +
+			'&recommenderId=' +
+			state.queryForm.recommenderId +
+			'&recommendedId=' +
+			state.queryForm.recommendedId +
+			'&type=' +
+			state.queryForm.type +
+			'&amountStart=' +
+			state.queryForm.amountStart +
+			'&amountEnd=' +
+			state.queryForm.amountEnd
+	).then(() => {
 		ElMessage.success('导出成功')
 	})
 }
-
 
 const addOrUpdateRef = ref()
 const addOrUpdateHandle = (id?: number) => {
