@@ -1,46 +1,52 @@
 <template>
 	<el-dialog v-model="visible" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false">
 		<el-form ref="dataFormRef" :model="dataForm" :rules="dataRules" label-width="100px" @keyup.enter="submitHandle()">
-	    				<!-- <el-form-item label="" prop="id">
+			<!-- <el-form-item label="" prop="id">
 					<el-input v-model="dataForm.id" placeholder=""></el-input>
 				</el-form-item> -->
-				<el-form-item label="走访时间" prop="visitTime">
-					<!-- <el-input v-model="dataForm.visitTime" placeholder="走访时间"></el-input> -->
-					<el-date-picker v-model="dataForm.visitTime" type="datetime" placeholder="选择日期时间" value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="走访人" prop="visitorIds">
-					<!-- <el-input v-model="dataForm.visitorIds" placeholder="走访人id数组"></el-input> -->
-					<el-select v-model="dataForm.visitorIds" filterable multiple placeholder="请选择走访人">
-						<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id+''" />
-					</el-select>
-				</el-form-item>
-				<el-form-item label="被走访人" prop="visitedId">
-					<!-- <el-input v-model="dataForm.visitedId" placeholder="被走访人id"></el-input> -->
-					<el-select v-model="dataForm.visitedId" filterable placeholder="请选择被走访人">
-						<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id" />
-					</el-select>
-				</el-form-item>
-				<el-form-item label="走访类型" prop="type">
-					<!-- <el-input v-model="dataForm.type" placeholder="走访类型"></el-input> -->
-					<el-select v-model="dataForm.type" placeholder="走访类型">
-						<el-option label="点对点走访" value="0" />
-						<el-option label="集体走访" value="1" />
-					</el-select>
-				</el-form-item>
-				<el-form-item label="走访内容" prop="content">
-					<el-input v-model="dataForm.content" placeholder="走访内容"></el-input>
-				</el-form-item>
-				<el-form-item label="走访情况" prop="comment">
-					<el-input v-model="dataForm.comment" placeholder="走访情况"></el-input>
-				</el-form-item>
-				<el-form-item label="是否群发走访" prop="status">
-					<!-- <el-input v-model="dataForm.status" placeholder="是否群发走访"></el-input> -->
-					<el-select v-model="dataForm.status" placeholder="是否群发走访">
-						<el-option label="是" value="1" />
-						<el-option label="否" value="0" />
-					</el-select>
-				</el-form-item>
-				<!-- <el-form-item label="" prop="createTime">
+			<el-form-item label="走访时间" prop="visitTime">
+				<!-- <el-input v-model="dataForm.visitTime" placeholder="走访时间"></el-input> -->
+				<el-date-picker
+					v-model="dataForm.visitTime"
+					type="datetime"
+					placeholder="选择日期时间"
+					value-format="YYYY-MM-DD HH:mm:ss"
+					format="YYYY-MM-DD HH:mm:ss"
+				></el-date-picker>
+			</el-form-item>
+			<el-form-item label="走访人" prop="visitorIds">
+				<!-- <el-input v-model="dataForm.visitorIds" placeholder="走访人id数组"></el-input> -->
+				<el-select v-model="dataForm.visitorIds" filterable multiple placeholder="请选择走访人">
+					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id + ''" />
+				</el-select>
+			</el-form-item>
+			<el-form-item label="被走访人" prop="visitedId">
+				<!-- <el-input v-model="dataForm.visitedId" placeholder="被走访人id"></el-input> -->
+				<el-select v-model="dataForm.visitedId" filterable placeholder="请选择被走访人">
+					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id" />
+				</el-select>
+			</el-form-item>
+			<el-form-item label="走访类型" prop="type">
+				<!-- <el-input v-model="dataForm.type" placeholder="走访类型"></el-input> -->
+				<el-select v-model="dataForm.type" placeholder="走访类型" :disabled="true">
+					<el-option label="点对点走访" value="0" />
+					<el-option label="集体走访" value="1" />
+				</el-select>
+			</el-form-item>
+			<el-form-item label="走访内容" prop="content">
+				<el-input v-model="dataForm.content" placeholder="走访内容"></el-input>
+			</el-form-item>
+			<el-form-item label="走访情况" prop="comment">
+				<el-input v-model="dataForm.comment" placeholder="走访情况"></el-input>
+			</el-form-item>
+			<el-form-item label="是否群发走访" prop="status">
+				<!-- <el-input v-model="dataForm.status" placeholder="是否群发走访"></el-input> -->
+				<el-select v-model="dataForm.status" placeholder="是否群发走访">
+					<el-option label="是" value="1" />
+					<el-option label="否" value="0" />
+				</el-select>
+			</el-form-item>
+			<!-- <el-form-item label="" prop="createTime">
 					<el-input v-model="dataForm.createTime" placeholder=""></el-input>
 				</el-form-item>
 				<el-form-item label="" prop="updateTime">
@@ -70,12 +76,13 @@ const dataForm = reactive({
 	visitTime: '',
 	visitorIds: [],
 	visitedId: '',
-	type: '',
+	type: '1',
 	content: '',
 	comment: '',
 	status: '',
 	createTime: '',
-	updateTime: ''})
+	updateTime: ''
+})
 
 const userInfoList = ref([])
 
@@ -108,8 +115,7 @@ const getPz_userInfoList = () => {
 	})
 }
 
-const dataRules = ref({
-})
+const dataRules = ref({})
 
 // 表单提交
 const submitHandle = () => {
