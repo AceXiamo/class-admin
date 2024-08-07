@@ -6,16 +6,33 @@
 				</el-form-item> -->
 			<el-form-item label="引荐日期" prop="recommendTime">
 				<!-- <el-input v-model="dataForm.recommendTime" placeholder="引荐日期"></el-input> -->
-				<el-date-picker v-model="dataForm.recommendTime" type="date" placeholder="请选择日期" format="YYYY/MM/DD"
-					value-format="YYYY-MM-DD HH:mm:ss" />
+				<el-date-picker
+					v-model="dataForm.recommendTime"
+					type="date"
+					placeholder="请选择日期"
+					format="YYYY/MM/DD"
+					value-format="YYYY-MM-DD HH:mm:ss"
+				/>
 			</el-form-item>
-			<el-form-item label="引荐人id" prop="recommenderId">
+			<el-form-item label="引荐人类型">
+				<el-radio-group v-model="dataForm.isCrossPlatformForRecommender" @change="recommenderTypeChange">
+					<el-radio label="0">非跨平台</el-radio>
+					<el-radio label="1">跨平台</el-radio>
+				</el-radio-group>
+			</el-form-item>
+			<el-form-item label="引荐人id" prop="recommenderId" v-if="dataForm.isCrossPlatformForRecommender === '0'">
 				<!-- <el-input v-model="dataForm.recommenderId" placeholder="引荐人id"></el-input> -->
 				<el-select v-model="dataForm.recommenderId" filterable placeholder="请选择引荐人">
 					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id" />
 				</el-select>
 			</el-form-item>
-			<el-form-item label="被引荐人id" prop="recommendedId">
+			<el-form-item label="被引荐人类型">
+				<el-radio-group v-model="dataForm.isCrossPlatformForRecommended" @change="recommendedTypeChange">
+					<el-radio label="0">非跨平台</el-radio>
+					<el-radio label="1">跨平台</el-radio>
+				</el-radio-group>
+			</el-form-item>
+			<el-form-item label="被引荐人id" prop="recommendedId" v-if="dataForm.isCrossPlatformForRecommended === '0'">
 				<!-- <el-input v-model="dataForm.recommendedId" placeholder="被引荐人id"></el-input> -->
 				<el-select v-model="dataForm.recommendedId" filterable placeholder="请选择被引荐人">
 					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id" />
@@ -33,8 +50,7 @@
 			</el-form-item>
 			<el-form-item label="成交日期" prop="dealTime">
 				<!-- <el-input v-model="dataForm.dealTime" placeholder="成交日期"></el-input> -->
-				<el-date-picker v-model="dataForm.dealTime" type="date" placeholder="请选择日期" format="YYYY/MM/DD"
-					value-format="YYYY-MM-DD HH:mm:ss" />
+				<el-date-picker v-model="dataForm.dealTime" type="date" placeholder="请选择日期" format="YYYY/MM/DD" value-format="YYYY-MM-DD HH:mm:ss" />
 			</el-form-item>
 			<el-form-item label="成交内容" prop="dealContent">
 				<el-input v-model="dataForm.dealContent" placeholder="成交内容"></el-input>
@@ -48,12 +64,6 @@
 			<el-form-item label="是否群发感谢函" prop="status">
 				<!-- <el-input v-model="dataForm.status" placeholder="是否群发感谢函"></el-input> -->
 				<el-select v-model="dataForm.status" placeholder="请选择是否群发感谢函">
-					<el-option label="是" value="1"></el-option>
-					<el-option label="否" value="0"></el-option>
-				</el-select>
-			</el-form-item>
-			<el-form-item label="是否跨平台" prop="isCrossPlatform">
-				<el-select v-model="dataForm.isCrossPlatform" clearable placeholder="请选择是否跨平台">
 					<el-option label="是" value="1"></el-option>
 					<el-option label="否" value="0"></el-option>
 				</el-select>
@@ -97,7 +107,9 @@ const dataForm = reactive({
 	status: '',
 	createTime: '',
 	updateTime: '',
-	isCrossPlatform: '0'
+	isCrossPlatform: '0',
+	isCrossPlatformForRecommender: '0',
+	isCrossPlatformForRecommended: '0'
 })
 
 const userInfoList = ref([])
@@ -121,7 +133,9 @@ const init = (id?: number) => {
 const getPz_recommend = (id: number) => {
 	usePz_recommendApi(id).then(res => {
 		Object.assign(dataForm, res.data)
-		dataForm.type+=''
+		dataForm.type += ''
+		dataForm.isCrossPlatformForRecommender = dataForm.recommenderId == '0' ? '1' : '0'
+		dataForm.isCrossPlatformForRecommended = dataForm.recommendedId == '0' ? '1' : '0'
 	})
 }
 const getPz_userInfoList = () => {
@@ -135,13 +149,29 @@ const dataRules = ref({
 	recommenderId: [{ required: true, message: '请输入引荐人id', trigger: 'blur' }],
 	recommendedId: [{ required: true, message: '请输入被引荐人id', trigger: 'blur' }],
 	type: [{ required: true, message: '请输入引荐类型', trigger: 'blur' }],
-	recommendContent: [{ required: true, message: '请输入引荐内容', trigger: 'blur' }],
+	recommendContent: [{ required: true, message: '请输入引荐内容', trigger: 'blur' }]
 	// dealTime: [{ required: true, message: '请输入成交日期', trigger: 'blur' }],
 	// dealContent: [{ required: true, message: '请输入成交内容', trigger: 'blur' }],
 	// dealAmout: [{ required: true, message: '请输入成交金额', trigger: 'blur' }],
 	// comment: [{ required: true, message: '请输入感谢函评语', trigger: 'blur' }],
 	// status: [{ required: true, message: '请输入是否群发感谢函', trigger: 'blur' }]
 })
+
+const recommenderTypeChange = (val: any) => {
+	if (val === '1') {
+		dataForm.recommenderId = '0'
+	} else {
+		dataForm.recommenderId = ''
+	}
+}
+
+const recommendedTypeChange = (val: any) => {
+	if (val === '1') {
+		dataForm.recommendedId = '0'
+	} else {
+		dataForm.recommendedId = ''
+	}
+}
 
 // 表单提交
 const submitHandle = () => {

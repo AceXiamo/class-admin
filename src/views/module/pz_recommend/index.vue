@@ -36,14 +36,6 @@
 				<span style="padding-left: 10px; padding-right: 10px"> - </span>
 				<el-input v-model="state.queryForm.amountEnd" clearable placeholder="金额" style="width: 100px"></el-input>
 			</el-form-item>
-			<el-form-item label="是否跨平台" prop="isCrossPlatform" style="width: 200px">
-				<el-select v-model="state.queryForm.isCrossPlatform" clearable placeholder="请选择是否跨平台">
-					<el-option label="是" value="1"></el-option>
-					<el-option label="否" value="0"></el-option>
-					<el-option label="全部" value=""></el-option>
-				</el-select>
-			</el-form-item>
-
 			<el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
 			</el-form-item>
@@ -70,8 +62,16 @@
 					{{ row.recommendTime ? dayjs(row.recommendTime).format('YYYY-MM-DD') : '' }}
 				</template>
 			</el-table-column>
-			<el-table-column prop="recommenderName" label="引荐人" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="recommendedName" label="被引荐人" header-align="center" align="center"></el-table-column>
+			<el-table-column prop="recommenderName" label="引荐人" header-align="center" align="center">
+				<template #default="{ row }">
+					{{ row.recommenderId == '0' ? '平台' : row.recommenderName }}
+				</template>
+			</el-table-column>
+			<el-table-column prop="recommendedName" label="被引荐人" header-align="center" align="center">
+				<template #default="{ row }">
+					{{ row.recommendedId == '0' ? '平台' : row.recommendedName }}
+				</template>
+			</el-table-column>
 			<el-table-column prop="type" label="引荐类型" header-align="center" align="center">
 				<template #default="{ row }">
 					{{ row.type == 0 ? '内部引荐' : '外部引荐' }}
