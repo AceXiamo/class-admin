@@ -6,17 +6,17 @@
 				</el-form-item> -->
 			<el-form-item label="用户角色状态" prop="status">
 				<!-- <el-input v-model="dataForm.status" placeholder="用户角色状态"></el-input> -->
-				<el-select v-model="dataForm.status" placeholder="请选择用户角色状态">
-					<el-option label="游客" value="0"></el-option>
+				<el-select v-model="dataForm.status" :disabled="true" placeholder="请选择用户角色状态">
+					<el-option label="游客" :value="0"></el-option>
 					<!-- <el-option label="待验证" value="1"></el-option> -->
-					<el-option label="准嘉宾" value="2"></el-option>
-					<el-option label="嘉宾" value="3"></el-option>
-					<el-option label="会员" value="4"></el-option>
-					<el-option label="顾问团" value="5"></el-option>
-					<el-option label="历史会员" value="6"></el-option>
+					<el-option label="准嘉宾" :value="2"></el-option>
+					<el-option label="嘉宾" :value="3"></el-option>
+					<el-option label="会员" :value="4"></el-option>
+					<el-option label="顾问团" :value="5"></el-option>
+					<el-option label="历史会员" :value="6"></el-option>
 				</el-select>
 			</el-form-item>
-			<el-form-item label="用户关联登录手机号" prop="account">
+			<el-form-item v-if="dataForm.status!=5" label="用户关联登录手机号" prop="account">
 				<el-input v-model="dataForm.account" placeholder="用户关联登录手机号"></el-input>
 			</el-form-item>
 			<!-- <el-form-item label="用户自定义标签" prop="tags">
@@ -37,7 +37,10 @@
 				<el-input v-model="dataForm.name" placeholder="用户姓名"></el-input>
 			</el-form-item>
 			<el-form-item label="用户性别" prop="sex">
-				<el-input v-model="dataForm.sex" placeholder="用户性别"></el-input>
+				<el-select v-model="dataForm.sex" placeholder="用户性别">
+					<el-option label="男" :value="0"></el-option>
+					<el-option label="女" :value="1"></el-option>
+				</el-select>
 			</el-form-item>
 			<el-form-item label="家乡" prop="homeplace">
 				<el-input v-model="dataForm.homeplace" placeholder="家乡"></el-input>
@@ -56,7 +59,7 @@
 			<el-form-item label="公司" prop="company">
 				<el-input v-model="dataForm.company" placeholder="公司"></el-input>
 			</el-form-item>
-			<el-form-item label="职位" prop="position">
+			<el-form-item label="职务" prop="position">
 				<el-input v-model="dataForm.position" placeholder="职位"></el-input>
 			</el-form-item>
 			<el-form-item label="公司地址" prop="companyAddress">
@@ -77,7 +80,7 @@
 			<el-form-item label="兴趣爱好" prop="hobby">
 				<el-input v-model="dataForm.hobby" placeholder="兴趣爱好"></el-input>
 			</el-form-item>
-			<el-form-item label="引荐人" prop="recommenderId">
+			<el-form-item v-if="dataForm.status!=5" label="引荐人" prop="recommenderId">
 				<!-- <el-input v-model="dataForm.recommenderId" placeholder="引荐人id"></el-input> -->
 				<el-select v-model="dataForm.recommenderId" placeholder="请选择引荐人">
 					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -86,7 +89,7 @@
 			<el-form-item label="联系电话" prop="mobile">
 				<el-input v-model="dataForm.mobile" placeholder="联系电话"></el-input>
 			</el-form-item>
-			<el-form-item label="微信个人二维码" prop="wechatQrCode">
+			<el-form-item label="个人微信二维码" prop="wechatQrCode">
 				<el-upload ref="upload2" action="#" :limit="1" :auto-upload="false" :on-change="handleChange2"
 					class="avatar-uploader" :before-upload="beforeAvatarUpload" :on-exceed="handleExceed2" :headers="headers"
 					:show-file-list="false">
@@ -153,7 +156,7 @@ const dataForm = reactive({
 const init = (id?: number) => {
 	visible.value = true
 	dataForm.id = ''
-
+	dataForm.status = 5
 	// 重置表单数据
 	if (dataFormRef.value) {
 		dataFormRef.value.resetFields()
@@ -180,7 +183,7 @@ const getPz_user_info = (id: number) => {
 		Object.assign(dataForm, res.data)
 		imageUrl.value = res.data.avatar
 		imageUrl2.value = res.data.wechatQrCode
-		dataForm.status += ''
+		// dataForm.status += ''
 	})
 }
 
@@ -199,6 +202,13 @@ const getPz_industryTypeList = () => {
 }
 
 const dataRules = ref({
+	name: [{ required: true, message: '请填写姓名', trigger: 'blur' }],
+	sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
+	industry: [{ required: true, message: '请填写行业', trigger: 'blur' }],
+	industryType: [{ required: true, message: '请选择行业类型', trigger: 'blur' }],
+	company: [{ required: true, message: '请填写公司', trigger: 'blur' }],
+	position: [{ required: true, message: '请填写职务', trigger: 'blur' }],
+	recommenderId: [{ required: true, message: '请选择引荐人', trigger: 'blur' }],
 })
 
 // 设置请求头
@@ -257,9 +267,12 @@ const submitHandle = () => {
 		}
 
 		if (!imageUrl.value) {
-			ElMessage.error('请先上传图片')
+			ElMessage.error('请先上传头像')
 			return
-		} else {
+		} else if(!imageUrl2.value){
+			ElMessage.error('个人微信二维码')
+			return
+		}else {
 			let param = new FormData()
 			if (fileUpload.value == null) {
 				let emptyBlob = new Blob([''], { type: 'application/octet-stream' })
