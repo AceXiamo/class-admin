@@ -1,7 +1,7 @@
 <template>
 	<el-card class="layout-home">
 		<view class="title">
-			<view>欢迎使用pinzhi-admin，让开发更简单！</view>
+			<view>深大校友商会对接平台</view>
 		</view>
 	</el-card>
 </template>
