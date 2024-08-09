@@ -22,6 +22,10 @@ import FastRadioGroup from '@/components/fast-radio-group'
 import FastSelect from '@/components/fast-select'
 import FastUser from '@/components/fast-user'
 import SvgIcon from '@/components/svg-icon'
+import { Context } from '@axm-pack/manage-render'
+import '@axm-pack/manage-render/dist/style.css'
+
+import 'virtual:uno.css'
 
 VXETable.setup({
 	zIndex: 3000,
@@ -47,4 +51,5 @@ app.use(FastUser)
 app.use(SvgIcon)
 app.use(ElementPlus)
 app.use(VXETable)
+app.use(Context)
 app.mount('#app')
