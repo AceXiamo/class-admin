@@ -9,8 +9,10 @@
     "lint": "eslint --fix --ext .vue,.jsx,.ts,.tsx ."
   },
   "dependencies": {
+    "@axm-pack/manage-render": "^0.2.0",
     "@element-plus/icons-vue": "2.3.1",
     "@kangc/v-md-editor": "2.3.17",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vueuse/core": "9.1.1",
     "@wangeditor/editor": "5.1.1",
     "@wangeditor/editor-for-vue": "5.1.12",
@@ -48,6 +50,7 @@
     "prettier": "2.8.4",
     "sass": "1.58.0",
     "typescript": "4.7.4",
+    "unocss": "0.58.9",
     "vite": "4.4.12",
     "vite-plugin-svg-icons": "2.0.1",
     "vite-plugin-vue-setup-extend": "0.4.0",

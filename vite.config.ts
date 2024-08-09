@@ -1,9 +1,10 @@
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import vueSetupExtend from 'vite-plugin-vue-setup-extend'
+import UnoCSS from 'unocss/vite'
 
 // 参考：https://cn.vitejs.dev/config/
 export default defineConfig({
@@ -17,6 +18,8 @@ export default defineConfig({
 	},
 	plugins: [
 		vue(),
+		vueJsx(),
+		UnoCSS(),
 		vueSetupExtend(),
 		createSvgIconsPlugin({
 			iconDirs: [resolve(__dirname, 'src/icons/svg')],
