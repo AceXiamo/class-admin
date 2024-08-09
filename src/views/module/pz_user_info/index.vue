@@ -25,6 +25,9 @@
 			<el-form-item>
 				<el-button v-auth="'module:pz_user_info:export'" type="primary" @click="exportHandle()">导出</el-button>
 			</el-form-item>
+			<el-form-item>
+				<el-button v-auth="'module:pz_user_info:save'" type="primary" @click="indexEdit()">排序编辑</el-button>
+			</el-form-item>
 			<!-- <el-form-item>
 				<el-button v-auth="'module:pz_user_info:delete'" type="danger" @click="deleteBatchHandle()">删除</el-button>
 			</el-form-item> -->
@@ -54,7 +57,7 @@
 			<el-table-column prop="tags" label="用户自定义标签" header-align="center" align="center">
 				<template #default="{ row }">
 					<el-tag
-						v-for="(tag, index) in JSON.parse(row.tags || '[]')"
+						v-for="(tag, index) in (JSON.parse(row.tags || '[]'))"
 						:key="tag"
 						closable
 						:disable-transitions="false"
@@ -128,6 +131,7 @@ import AddOrUpdate from './add-or-update.vue'
 import { usePz_user_infoAddTagApi, usePz_user_infoSubmitApi } from '@/api/module/pz_user_info'
 import { useRouter } from 'vue-router'
 import { dayjs } from 'element-plus'
+import IndexListDialog from './components/IndexListDialog'
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/module/pz_user_info/page',
@@ -226,6 +230,10 @@ const exportHandle = () => {
 	downloadHandle('module/pz_user_info/export').then(res => {
 		ElMessage.success('导出成功')
 	})
+}
+
+const indexEdit = () => {
+	IndexListDialog.show()
 }
 
 // 跳转到用户数据记录页面
