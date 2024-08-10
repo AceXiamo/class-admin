@@ -27,9 +27,9 @@
 			<el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
 			</el-form-item>
-			<!-- <el-form-item>
+			<el-form-item>
 				<el-button v-auth="'module:pz_visit:save'" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-			</el-form-item> -->
+			</el-form-item>
 			<!-- <el-form-item>
 				<el-button v-auth="'module:pz_visit:delete'" type="danger" @click="deleteBatchHandle()">删除</el-button>
 			</el-form-item> -->

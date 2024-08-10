@@ -76,7 +76,7 @@ const dataForm = reactive({
 	visitTime: '',
 	visitorIds: [],
 	visitedId: '',
-	type: '1',
+	type: '0',
 	content: '',
 	comment: '',
 	status: '',
