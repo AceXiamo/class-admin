@@ -1,39 +1,57 @@
 <template>
 	<el-dialog v-model="visible" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false">
 		<el-form ref="dataFormRef" :model="dataForm" :rules="dataRules" label-width="100px" @keyup.enter="submitHandle()">
-	    				<el-form-item label="" prop="id">
-					<el-input v-model="dataForm.id" placeholder=""></el-input>
-				</el-form-item>
-				<el-form-item label="活动id" prop="eventId">
-					<el-input v-model="dataForm.eventId" placeholder="活动id"></el-input>
-				</el-form-item>
-				<el-form-item label="用户id" prop="userId">
-					<el-input v-model="dataForm.userId" placeholder="用户id"></el-input>
-				</el-form-item>
-				<el-form-item label="是否出席" prop="present">
-					<el-input v-model="dataForm.present" placeholder="是否出席"></el-input>
-				</el-form-item>
-				<el-form-item label="是否代替出席" prop="represent">
-					<el-input v-model="dataForm.represent" placeholder="是否代替出席"></el-input>
-				</el-form-item>
-				<el-form-item label="是否缺席" prop="absent">
-					<el-input v-model="dataForm.absent" placeholder="是否缺席"></el-input>
-				</el-form-item>
-				<el-form-item label="是否迟到" prop="lateArrival">
-					<el-input v-model="dataForm.lateArrival" placeholder="是否迟到"></el-input>
-				</el-form-item>
-				<el-form-item label="是否早退" prop="earlyDeparture">
-					<el-input v-model="dataForm.earlyDeparture" placeholder="是否早退"></el-input>
-				</el-form-item>
-				<el-form-item label="是否确认录入" prop="status">
-					<el-input v-model="dataForm.status" placeholder="是否确认录入"></el-input>
-				</el-form-item>
-				<el-form-item label="" prop="createTime">
-					<el-input v-model="dataForm.createTime" placeholder=""></el-input>
-				</el-form-item>
-				<el-form-item label="" prop="updateTime">
-					<el-input v-model="dataForm.updateTime" placeholder=""></el-input>
-				</el-form-item>
+			<!-- <el-form-item label="id" prop="id">
+				<el-input v-model="dataForm.id" placeholder=""></el-input>
+			</el-form-item> -->
+			<el-form-item label="活动id" prop="eventId">
+				<el-select v-model="dataForm.eventId" placeholder="活动" style="width: 240px">
+					<el-option v-for="item in eventOptions" :key="item.value" :label="item.label" :value="item.value"
+						:disabled="item.disabled" />
+				</el-select>
+			</el-form-item>
+			<el-form-item label="用户" prop="userId">
+				<el-select v-model="dataForm.userId" placeholder="活动" style="width: 240px">
+					<el-option v-for="item in userOptions" :key="item.value" :label="item.label" :value="item.value"
+						:disabled="item.disabled" />
+				</el-select>
+			</el-form-item>
+			<el-form-item label="是否出席" prop="present">
+				<el-select v-model="dataForm.present" placeholder="是否出席" style="width: 240px">
+					<el-option label="是" :value="1"></el-option>
+					<el-option label="否" :value="0"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item label="是否代替出席" prop="represent">
+				<el-select v-model="dataForm.represent" placeholder="是否出席" style="width: 240px">
+					<el-option label="是" :value="1"></el-option>
+					<el-option label="否" :value="0"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item label="是否缺席" prop="absent">
+				<el-select v-model="dataForm.absent" placeholder="是否出席" style="width: 240px">
+					<el-option label="是" :value="1"></el-option>
+					<el-option label="否" :value="0"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item label="是否迟到" prop="lateArrival">
+				<el-select v-model="dataForm.lateArrival" placeholder="是否出席" style="width: 240px">
+					<el-option label="是" :value="1"></el-option>
+					<el-option label="否" :value="0"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item label="是否早退" prop="earlyDeparture">
+				<el-select v-model="dataForm.earlyDeparture" placeholder="是否出席" style="width: 240px">
+					<el-option label="是" :value="1"></el-option>
+					<el-option label="否" :value="0"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item label="是否确认录入" prop="status">
+				<el-select v-model="dataForm.status" placeholder="是否出席" style="width: 240px">
+					<el-option label="是" :value="1"></el-option>
+					<el-option label="否" :value="0"></el-option>
+				</el-select>
+			</el-form-item>
 		</el-form>
 		<template #footer>
 			<el-button @click="visible = false">取消</el-button>
@@ -45,7 +63,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus/es'
-import { usePz_event_registrationApi, usePz_event_registrationSubmitApi } from '@/api/module/pz_event_registration'
+import { usePz_event_registrationApi, usePz_event_registrationSubmitApi, eventList, userInfoList } from '@/api/module/pz_event_registration'
 
 const emit = defineEmits(['refreshDataList'])
 
@@ -63,7 +81,43 @@ const dataForm = reactive({
 	earlyDeparture: '',
 	status: '',
 	createTime: '',
-	updateTime: ''})
+	updateTime: ''
+})
+
+const eventOptions = ref<any>([])
+const loadEventOptions = () => {
+	eventList({
+		page: 1,
+		limit: 1000,
+		theme: ''
+	}).then(res => {
+		console.log(res)
+		eventOptions.value = res.data.list.map((item: any) => {
+			return {
+				value: item.id,
+				label: item.theme
+			}
+		})
+	})
+}
+loadEventOptions()
+
+const userOptions = ref<any>([])
+const loadUserOptions = () => {
+	userInfoList({
+		page: 1,
+		limit: 1000,
+		name: ''
+	}).then(res => {
+		userOptions.value = res.data.list.map((item: any) => {
+			return {
+				value: item.id,
+				label: item.name
+			}
+		})
+	})
+}
+loadUserOptions()
 
 const init = (id?: number) => {
 	visible.value = true

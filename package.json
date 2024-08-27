@@ -9,7 +9,7 @@
     "lint": "eslint --fix --ext .vue,.jsx,.ts,.tsx ."
   },
   "dependencies": {
-    "@axm-pack/manage-render": "^0.2.0",
+    "@axm-pack/manage-render": "^0.2.3",
     "@element-plus/icons-vue": "2.3.1",
     "@kangc/v-md-editor": "2.3.17",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
