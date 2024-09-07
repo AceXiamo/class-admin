@@ -59,6 +59,7 @@ const editorConfig: Partial<IEditorConfig> = {
 		uploadImage: {
 			server: constant.uploadUrl + '?access_token=' + cache.getToken(),
 			fieldName: 'file',
+			maxFileSize: 10 * 1024 * 1024 ,
 			// 自定义插入图片
 			customInsert(res: any, insertFn: InsertFnType) {
 				// res 即服务端的返回结果
