@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="visible" :title="!dataForm.id ? '新增一个任期' : '修改'" :close-on-click-modal="false">
+	<el-dialog v-model="visible" :title="!dataForm.id ? '新增一个任期' : '修改'" width="1000px" :close-on-click-modal="false">
 		<el-form ref="dataFormRef" :model="dataForm" :rules="dataRules" label-width="100px" @keyup.enter="submitHandle()">
 			<!-- <el-form-item label="" prop="id">
 					<el-input v-model="dataForm.id" placeholder=""></el-input>
@@ -13,8 +13,15 @@
 				</el-form-item>
 				<el-form-item label="任期结束时间" prop="endTime">
 					<el-input v-model="dataForm.endTime" placeholder="任期结束时间"></el-input> -->
-				<el-date-picker v-model="dateRange" type="daterange" range-separator="到" start-placeholder="请选择日期"
-					end-placeholder="请选择日期" @change="handleDateChange" value-format="YYYY-MM-DD HH:mm:ss"></el-date-picker>
+				<el-date-picker
+					v-model="dateRange"
+					type="daterange"
+					range-separator="到"
+					start-placeholder="请选择日期"
+					end-placeholder="请选择日期"
+					@change="handleDateChange"
+					value-format="YYYY-MM-DD HH:mm:ss"
+				></el-date-picker>
 			</el-form-item>
 			<!-- <el-form-item label="领导成员id" prop="userId">
 					<el-input v-model="dataForm.userId" placeholder="领导成员id"></el-input>
@@ -26,30 +33,47 @@
 					<el-input v-model="dataForm.mainImg" placeholder="首页图"></el-input>
 				</el-form-item> -->
 			<el-form-item label="领导团队成员">
-				<div v-for="(leaderShip, index) in leaderShips" :key="index" style="display: flex; align-items: flex-start; margin-bottom: 20px;">
-					<el-input v-model="leaderShip.position" placeholder="领导团队职位" style="width: 200px; margin-right: 20px;"></el-input>
+				<div v-for="(leaderShip, index) in leaderShips" :key="index" style="display: flex; align-items: flex-start; margin-bottom: 20px">
+					<el-input v-model="leaderShip.position" placeholder="领导团队职位" style="width: 200px; margin-right: 20px"></el-input>
 					<!-- <el-input v-model="leaderShip.userId" placeholder="领导成员id" style="width: 200px;"></el-input> -->
-					<el-select v-model="leaderShip.userId" filterable placeholder="请选择领导成员" style="width: 200px; margin-right: 20px;">
+					<el-select v-model="leaderShip.userId" filterable placeholder="请选择领导成员" style="width: 200px; margin-right: 20px">
 						<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id" />
 					</el-select>
+					<el-input-number v-model="leaderShip.sort" :min="0" style="margin-right: 20px" />
 					<!-- <el-input v-model="leaderShip.mainImg" placeholder="首页图" style="width: 100px;"></el-input> -->
-					<el-upload ref="upload" action="#" :limit="1" :auto-upload="false"
-						:on-change="file => handleChange(file, index)" class="avatar-uploader"
-						:before-upload="beforeAvatarUpload" :on-exceed="file => handleExceed(file, index)"
-						:headers="headers" :show-file-list="false">
+					<el-upload
+						ref="upload"
+						action="#"
+						:limit="1"
+						:auto-upload="false"
+						:on-change="file => handleChange(file, index)"
+						class="avatar-uploader"
+						:before-upload="beforeAvatarUpload"
+						:on-exceed="file => handleExceed(file, index)"
+						:headers="headers"
+						:show-file-list="false"
+						style="margin-right: 20px"
+					>
 						<!-- <el-button type="primary" style="align-self: flex-start;">首页图片</el-button> -->
-						<el-image v-if="imageUrl[index]" :src="imageUrl[index]" class="avatar"
-							style="width: 100px; height: 100px; align-self: center" fit="contain"/>
-						<el-icon v-else class="avatar-uploader-icon" style="border: 1px dashed #ccc; width: 100px; height: 100px;">
+						<el-image
+							v-if="imageUrl[index]"
+							:src="imageUrl[index]"
+							class="avatar"
+							style="width: 100px; height: 100px; align-self: center"
+							fit="contain"
+						/>
+						<el-icon v-else class="avatar-uploader-icon" style="border: 1px dashed #ccc; width: 100px; height: 100px">
 							<Plus />
 							首页图片
 						</el-icon>
 					</el-upload>
-				</div>
-				<div>
-					<el-button @click="handleAddLeader">新增岗位</el-button>
+					<el-button type="danger" @click="handleDelLeader(index)">删除</el-button>
 				</div>
 			</el-form-item>
+
+			<div style="margin-left: 100px">
+				<el-button @click="handleAddLeader">新增岗位</el-button>
+			</div>
 			<!-- <el-form-item label="" prop="status">
 					<el-input v-model="dataForm.status" placeholder=""></el-input>
 				</el-form-item>
@@ -71,8 +95,8 @@
 import { reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox, UploadInstance, UploadProps, UploadRawFile, genFileId } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-import { usePz_leadershipSessionApi, usePz_leadershipSubmitApi } from '@/api/module/pz_leadership'
-import { it } from 'element-plus/es/locale';
+import { usePz_leadershipSessionApi, usePz_leadershipSubmitApi, usePz_leaderShipDelMemberApi } from '@/api/module/pz_leadership'
+import { it } from 'element-plus/es/locale'
 import { usePz_user_infoAllApi } from '@/api/module/pz_user_info'
 
 const emit = defineEmits(['refreshDataList'])
@@ -92,7 +116,8 @@ const dataForm = reactive({
 	endTime: '',
 	status: '',
 	createTime: '',
-	updateTime: ''
+	updateTime: '',
+	sort: 0
 })
 
 const init = (id?: number) => {
@@ -103,7 +128,7 @@ const init = (id?: number) => {
 	if (dataFormRef.value) {
 		dataFormRef.value.resetFields()
 		leaderShips.value = []
-		upload.value.map((item) => item.clearFiles())
+		upload.value.map(item => item.clearFiles())
 		imageUrl.value = leaderShips.value.map(() => '')
 		fileUpload.value = leaderShips.value.map(() => null)
 	}
@@ -124,8 +149,9 @@ const getPz_leadership = (id: number) => {
 		dataForm.endTime = res.data[0].endTime
 		dataForm.session = res.data[0].session
 		dataForm.status = res.data[0].status
+		dataForm.sort = res.data[0].sort
 		dateRange.value = [dataForm.startTime, dataForm.endTime]
-		imageUrl.value = leaderShips.value.map((item) => item.mainImg + '?' + new Date().getTime())
+		imageUrl.value = leaderShips.value.map(item => item.mainImg + '?' + new Date().getTime())
 	})
 }
 // 获取用户信息列表
@@ -137,7 +163,7 @@ const getPz_userInfoList = () => {
 
 // 时间选择处理
 const dateRange = ref([])
-const handleDateChange = (value) => {
+const handleDateChange = value => {
 	if (value === null) {
 		dataForm.startTime = ''
 		dataForm.endTime = ''
@@ -150,9 +176,29 @@ const handleDateChange = (value) => {
 
 const leaderShips = ref<any[]>([])
 
+// 删除领导团队成员
+const handleDelLeader = (index: number) => {
+	// usePz_leaderShipDelMemberApi
+	ElMessageBox.confirm('确定删除该团队成员吗？', '提示', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning'
+	}).then(() => {
+		usePz_leaderShipDelMemberApi(leaderShips.value[index].id).then((res: any) => {
+			if (res.code == 0) {
+				ElMessage.success('删除成功')
+				leaderShips.value.splice(index, 1)
+				imageUrl.value.splice(index, 1)
+				fileUpload.value.splice(index, 1)
+				emit('refreshDataList')
+			}
+		})
+	})
+}
+
 // 新增领导团队成员
 const handleAddLeader = () => {
-	leaderShips.value.push({ ...dataForm, userId: '', position: '', mainImg: '' })
+	leaderShips.value.push({ ...dataForm, userId: '', position: '', mainImg: '', sort: 0 })
 	imageUrl.value.push('')
 	fileUpload.value.push(null)
 }
@@ -184,17 +230,15 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = rawFile => {
 	if (rawFile.type !== 'image/jpeg') {
 		ElMessage.error('Avatar picture must be JPG format!')
 		return false
-	} else if (rawFile.size / 1024 / 1024 > 2) {
-		ElMessage.error('Avatar picture size can not exceed 2MB!')
+	} else if (rawFile.size / 1024 / 1024 > 10) {
+		ElMessage.error('Avatar picture size can not exceed 10MB!')
 		return false
 	}
 	return true
 }
 
-
-
 const dataRules = ref({
-	session: [{ required: true, message: '请输入届数', trigger: 'blur' }],
+	session: [{ required: true, message: '请输入届数', trigger: 'blur' }]
 	// startTime: [{ required: true, message: '请选择任期开始时间', trigger: 'change' }],
 	// endTime: [{ required: true, message: '请选择任期结束时间', trigger: 'change' }],
 	// // userId: [{ required: true, message: '请输入领导成员id', trigger: 'blur' }],
@@ -206,23 +250,23 @@ const dataRules = ref({
 })
 
 // 表单提交
-const submitHandle = () => {
+const submitHandle = async () => {
 	dataFormRef.value.validate((valid: boolean) => {
 		if (!valid) {
 			return false
 		}
-		if(!dateRange.value[0] || !dateRange.value[1]) {
+		if (!dateRange.value[0] || !dateRange.value[1]) {
 			ElMessage.error('请选择任期时间')
 			return false
 		}
 		console.log(leaderShips.value)
 
 		for (let index = 0; index < leaderShips.value.length; index++) {
-			if(leaderShips.value[index].userId == '' || leaderShips.value[index].position == '') {
+			if (leaderShips.value[index].userId == '' || leaderShips.value[index].position == '') {
 				continue
 			}
 			if (!imageUrl.value[index]) {
-				ElMessage.error('请上传'+leaderShips.value[index].position+'的图片')
+				ElMessage.error('请上传' + leaderShips.value[index].position + '的图片')
 				return false
 			}
 			let param = new FormData()
@@ -233,22 +277,30 @@ const submitHandle = () => {
 				param.append('file', fileUpload.value[index].raw)
 			}
 
-			let jsonStr = JSON.stringify({...dataForm,id:leaderShips.value[index].id,userId:leaderShips.value[index].userId,position:leaderShips.value[index].position})
+			let jsonStr = JSON.stringify({
+				...dataForm,
+				id: leaderShips.value[index].id,
+				userId: leaderShips.value[index].userId,
+				position: leaderShips.value[index].position,
+				sort: leaderShips.value[index].sort
+			})
 			const blob = new Blob([jsonStr], { type: 'application/json' })
 			param.append('vo', blob)
 
-			usePz_leadershipSubmitApi(param,leaderShips.value[index].id).then(() => {
+			usePz_leadershipSubmitApi(param, leaderShips.value[index].id).then(() => {
 				ElMessage.success({
 					message: '操作成功',
 					duration: 500,
 					onClose: () => {
 						visible.value = false
-						emit('refreshDataList')
+
+						if (index == leaderShips.value.length - 1) {
+							emit('refreshDataList')
+						}
 					}
 				})
 			})
 		}
-
 	})
 }
 

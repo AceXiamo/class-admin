@@ -84,3 +84,17 @@ export const usePz_home_bannersMoreUpateApi = (dataForm: any) => {
         }
     })
 }
+
+// “了解更多”api
+
+export const usePz_home_bannersQrCodeShowApi = () => {
+    return service.get('/module/home/qrCode/show')
+}
+
+export const usePz_home_bannersQrCodeUpateApi = (dataForm: any) => {
+    return service.post('/module/home/qrCode/update', dataForm,{
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+}

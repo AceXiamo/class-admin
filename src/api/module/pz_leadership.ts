@@ -31,3 +31,11 @@ export const usePz_leaderShipWeekApi = () => {
 export const usePz_leaderShipWeekSubmitApi = (dataForm: any) => {	
 	return service.post('/module/pz_leadership/week/saveOrUpdate', dataForm)
 }
+
+export const usePz_leaderShipDelMemberApi = (id: number) => {	
+	return service.delete(`/module/pz_leadership/delete/member/${id}`)
+}
+
+export const usePz_leaderShipDelWeekApi = (id: number) => {	
+	return service.delete(`/module/pz_leadership/week/delete/${id}`)
+}

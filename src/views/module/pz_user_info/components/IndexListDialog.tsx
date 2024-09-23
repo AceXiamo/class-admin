@@ -59,6 +59,11 @@ const DialogContent = defineComponent({
 				pageNum: () => queryForm.value.page,
 				pageSize: () => queryForm.value.limit
 			},
+			dataFetch: (pageNum,pageSize) => {
+				queryForm.value.page = pageNum
+				queryForm.value.limit = pageSize
+				loadData()
+			},
 			loading,
 			total,
 			columns: [

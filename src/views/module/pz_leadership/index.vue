@@ -65,6 +65,7 @@
 			<el-date-picker v-model="week.startTime" type="date" placeholder="请选择日期" />
 			<div style="margin-right: 10px; margin-left: 10px">到</div>
 			<el-date-picker v-model="week.endTime" type="date" placeholder="请选择日期" />
+			<el-button type="danger" style="margin-left: 10px" @click="handleDel(index)">删除</el-button>
 		</div>
 		<div style="margin: 10px">
 			<el-button @click="weekListAddHandle" type="primary">新增一周</el-button>
@@ -81,7 +82,7 @@ import { onMounted, reactive, ref } from 'vue'
 import { IHooksOptions } from '@/hooks/interface'
 import AddOrUpdate from './add-or-update.vue'
 import { ElMessage, ElMessageBox, dayjs } from 'element-plus'
-import { usePz_leaderShipWeekApi, usePz_leaderShipWeekSubmitApi } from '@/api/module/pz_leadership'
+import { usePz_leaderShipWeekApi, usePz_leaderShipWeekSubmitApi, usePz_leaderShipDelWeekApi } from '@/api/module/pz_leadership'
 import { cloneDeep } from 'lodash'
 
 const state: IHooksOptions = reactive({
@@ -96,6 +97,21 @@ const weekDataForm = reactive({
 	startTime: '',
 	endTime: ''
 })
+
+const handleDel = (index: number) => {
+	ElMessageBox.confirm('确定删除吗?', '提示', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning'
+	}).then(() => {
+		usePz_leaderShipDelWeekApi(weekList.value[index].id).then((res: any) => {
+			if (res.code == 0) {
+				ElMessage.success('删除成功')
+				weekList.value.splice(index, 1)
+			}
+		})
+	})
+}
 
 const weekList = ref<any[]>([])
 const getWeekList = () => {
