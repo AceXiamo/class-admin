@@ -24,7 +24,11 @@
             <el-table-column prop="recommendedId" label="被引荐人id" header-align="center" align="center"></el-table-column> -->
 				<el-table-column prop="recommenderName" label="引荐人" header-align="center" align="center"></el-table-column>
 				<el-table-column prop="recommendedName" label="被引荐人" header-align="center" align="center"></el-table-column>
-				<el-table-column prop="type" label="引荐类型" header-align="center" align="center"></el-table-column>
+				<el-table-column prop="type" label="引荐类型" header-align="center" align="center">
+					<template #default="{ row }">
+						{{ row.type == 0 ? '内部引荐' : '外部引荐' }}
+					</template>
+				</el-table-column>
 				<el-table-column prop="recommendContent" label="引荐内容" header-align="center" align="center"></el-table-column>
 				<el-table-column prop="dealTime" label="成交日期" header-align="center" align="center">
 					<template #default="{ row }">
@@ -61,7 +65,11 @@
             <el-table-column prop="recommendedId" label="被引荐人id" header-align="center" align="center"></el-table-column> -->
 				<el-table-column prop="recommenderName" label="引荐人" header-align="center" align="center"></el-table-column>
 				<el-table-column prop="recommendedName" label="被引荐人" header-align="center" align="center"></el-table-column>
-				<el-table-column prop="type" label="引荐类型" header-align="center" align="center"></el-table-column>
+				<el-table-column prop="type" label="引荐类型" header-align="center" align="center">
+					<template #default="{ row }">
+						{{ row.type == 0 ? '内部引荐' : '外部引荐' }}
+					</template></el-table-column
+				>
 				<el-table-column prop="recommendContent" label="引荐内容" header-align="center" align="center"></el-table-column>
 				<el-table-column prop="dealTime" label="成交日期" header-align="center" align="center">
 					<template #default="{ row }">
@@ -124,8 +132,18 @@
 			<el-table :data="state.eventList" border style="width: 100%">
 				<el-table-column prop="eventTime" label="活动时间" header-align="center" align="center"></el-table-column>
 				<el-table-column prop="theme" label="活动主题" header-align="center" align="center"></el-table-column>
-				<el-table-column prop="status" label="是否上架" header-align="center" align="center"></el-table-column>
-				<el-table-column prop="type" label="活动类型" header-align="center" align="center"></el-table-column>
+				<el-table-column prop="status" label="是否上架" header-align="center" align="center">
+					<template #default="{ row }">
+						{{ row.status == 1 ? '是' : '否' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="type" label="活动类型" header-align="center" align="center">
+					<template #default="{ row }">
+						<div v-if="row.type === 0">普通活动</div>
+						<div v-else-if="row.type === 1">会议/培训</div>
+						<div v-else-if="row.type === 2">集体走访</div>
+					</template>
+				</el-table-column>
 				<el-table-column prop="createTime" label="发布时间" header-align="center" align="center"></el-table-column>
 
 				<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
@@ -141,7 +159,17 @@
 			<div style="margin-bottom: 10px">嘉宾记录</div>
 			<el-table :data="state.recommenderList" border style="width: 100%">
 				<el-table-column prop="name" label="用户姓名" header-align="center" align="center"></el-table-column>
-				<el-table-column prop="status" label="用户角色状态" header-align="center" align="center"></el-table-column>
+				<el-table-column prop="status" label="用户角色状态" header-align="center" align="center">
+					<template #default="{ row }">
+						<div v-if="row.status === 0">游客</div>
+						<div v-else-if="row.status === 1">待验证</div>
+						<div v-else-if="row.status === 2">准嘉宾</div>
+						<div v-else-if="row.status === 3">嘉宾</div>
+						<div v-else-if="row.status === 4">会员</div>
+						<div v-else-if="row.status === 5">顾问团</div>
+						<div v-else-if="row.status === 6">历史会员</div>
+					</template>
+				</el-table-column>
 				<!-- <el-table-column prop="account" label="用户关联登录手机号" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="sex" label="用户性别" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="homeplace" label="家乡" header-align="center" align="center"></el-table-column>
@@ -164,7 +192,7 @@
 			</el-table-column> -->
 				<el-table-column prop="createTime" label="创建时间" header-align="center" align="center">
 					<template #default="{ row }">
-						{{ row.createTime ? dayjs(row.createTime).format('YYYY-MM-DD') : '' }}
+						{{ row.createTime ? dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss') : '' }}
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">

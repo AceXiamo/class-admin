@@ -89,7 +89,7 @@
 			<el-table-column prop="wechatQrCode" label="微信个人二维码" header-align="center" align="center"></el-table-column> -->
 			<el-table-column prop="createTime" label="创建时间" header-align="center" align="center">
 				<template #default="{ row }">
-					{{ row.createTime ? dayjs(row.createTime).format('YYYY-MM-DD') : '' }}
+					{{ row.createTime ? dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss') : '' }}
 				</template>
 			</el-table-column>
 			<!-- <el-table-column prop="updateTime" label="修改时间" header-align="center" align="center"></el-table-column> -->
