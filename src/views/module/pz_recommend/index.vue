@@ -86,7 +86,11 @@
 			<el-table-column prop="dealContent" label="成交内容" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="dealAmout" label="成交金额" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="comment" label="感谢函评语" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="status" label="是否群发感谢函" header-align="center" align="center"></el-table-column>
+			<el-table-column prop="status" label="是否群发感谢函" header-align="center" align="center">
+				<template #default="{ row }">
+					{{ row.status == 0 ? '是' : '否' }}
+				</template>
+			</el-table-column>
 			<!-- <el-table-column prop="createTime" label="" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="updateTime" label="" header-align="center" align="center"></el-table-column> -->
 			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
