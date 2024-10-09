@@ -33,8 +33,8 @@
 			</el-form-item> -->
 		</el-form>
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
-			<!-- <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-			<el-table-column prop="id" label="" header-align="center" align="center"></el-table-column> -->
+			<el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
+			<!-- <el-table-column prop="id" label="" header-align="center" align="center"></el-table-column> -->
 			<el-table-column prop="name" label="用户姓名" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="status" label="用户角色状态" header-align="center" align="center">
 				<template #default="{ row }">
@@ -57,7 +57,7 @@
 			<el-table-column prop="tags" label="用户自定义标签" header-align="center" align="center">
 				<template #default="{ row }">
 					<el-tag
-						v-for="(tag, index) in (JSON.parse(row.tags || '[]'))"
+						v-for="(tag, index) in JSON.parse(row.tags || '[]')"
 						:key="tag"
 						closable
 						:disable-transitions="false"
@@ -124,7 +124,7 @@
 <script setup lang="ts" name="ModulePz_user_infoIndex">
 import { useCrud } from '@/hooks'
 import { reactive, ref, nextTick, onMounted } from 'vue'
-import { ElInput, ElMessageBox } from 'element-plus'
+import { ElInput, ElLoading, ElMessageBox } from 'element-plus'
 import { ElMessage, UploadInstance, UploadProps, UploadRawFile, genFileId } from 'element-plus'
 import { IHooksOptions } from '@/hooks/interface'
 import AddOrUpdate from './add-or-update.vue'
@@ -227,9 +227,20 @@ const userVerifyHandle = (row: any, status: any) => {
 }
 
 const exportHandle = () => {
-	downloadHandle('module/pz_user_info/export').then(res => {
-		ElMessage.success('导出成功')
+	if (state.dataListSelections && state.dataListSelections?.length <= 0) return
+	console.log(state.dataListSelections)
+	const loading = ElLoading.service({
+		lock: true,
+		text: '导出中',
+		spinner: 'el-icon-loading'
 	})
+	downloadHandle('module/pz_user_info/export', state.dataListSelections)
+		.then(res => {
+			ElMessage.success('导出成功')
+		})
+		.finally(() => {
+			loading.close()
+		})
 }
 
 const indexEdit = () => {

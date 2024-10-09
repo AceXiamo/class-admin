@@ -158,12 +158,14 @@ export const useCrud = (options: IHooksOptions) => {
 			.catch(() => {})
 	}
 
-	const downloadHandle = async (url: string, filename?: string, method: string = 'GET'): Promise<any> => {
+	const downloadHandle = async (url: string, data?: any[], filename?: string, method: string = 'POST'): Promise<any> => {
 		try {
 			const res = await service({
 				responseType: 'blob',
 				url: url,
-				method: method
+				method: method,
+				data: data,
+				timeout: 120000
 			})
 			// 创建a标签
 			const down = document.createElement('a')

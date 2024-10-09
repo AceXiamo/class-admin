@@ -221,7 +221,7 @@ import { usePz_user_infoUserApi, usePz_user_infoDeleteApi } from '@/api/module/p
 import { reactive, ref } from 'vue'
 import { onMounted } from 'vue'
 import { computed } from 'vue'
-import { ElMessage, ElMessageBox, dayjs } from 'element-plus'
+import { ElLoading, ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import RecommendAddOrUpdate from '@/views/module/pz_recommend/add-or-update.vue'
 import VisitAddOrUpdate from '@/views/module/pz_visit/add-or-update.vue'
 import EventAddOrUpdate from '@/views/module/pz_event/add-or-update.vue'
@@ -295,9 +295,18 @@ const getRecommenderList = () => {
 
 // 导出用户数据
 const exportDataHandle = (id: number) => {
-	downloadHandle('module/pz_user_info/exportData/' + id).then(res => {
-		ElMessage.success('导出成功')
+	const loading = ElLoading.service({
+		lock: true,
+		text: '导出中',
+		spinner: 'el-icon-loading'
 	})
+	downloadHandle('module/pz_user_info/exportData/' + id)
+		.then(res => {
+			ElMessage.success('导出成功')
+		})
+		.finally(() => {
+			loading.close()
+		})
 }
 
 // 引荐编辑弹窗
