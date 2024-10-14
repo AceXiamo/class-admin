@@ -4,11 +4,14 @@
 			<el-form-item label="用户姓名" prop="name">
 				<el-input v-model="state.queryForm.name" clearable placeholder="请输入用户姓名" style="width: 150px"></el-input>
 			</el-form-item>
+			<el-form-item label="手机号" prop="account">
+				<el-input v-model="state.queryForm.account" clearable placeholder="请输入用户手机号" style="width: 150px"></el-input>
+			</el-form-item>
 			<el-form-item label="用户角色状态" prop="status">
 				<!-- <el-input v-model="state.queryForm.status" clearable placeholder="请输入用户角色状态"></el-input> -->
 				<el-select v-model="state.queryForm.status" clearable placeholder="请选择用户角色状态" style="width: 200px">
 					<el-option label="游客" value="0"></el-option>
-					<el-option label="待验证" value="1"></el-option>
+					<!-- <el-option label="待验证" value="1"></el-option> -->
 					<el-option label="准嘉宾" value="2"></el-option>
 					<el-option label="嘉宾" value="3"></el-option>
 					<el-option label="会员" value="4"></el-option>
@@ -117,7 +120,7 @@
 		</el-pagination>
 
 		<!-- 弹窗, 新增 / 修改 -->
-		<add-or-update ref="addOrUpdateRef" @refreshDataList="getDataList"></add-or-update>
+		<add-or-update ref="addOrUpdateRef" @refreshDataList="getDataList(true)"></add-or-update>
 	</el-card>
 </template>
 
@@ -138,7 +141,8 @@ const state: IHooksOptions = reactive({
 	deleteUrl: '/module/pz_user_info',
 	queryForm: {
 		name: '',
-		status: ''
+		status: '',
+		account: ''
 	}
 })
 

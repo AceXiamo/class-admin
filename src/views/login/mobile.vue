@@ -1,11 +1,11 @@
 <template>
-	<el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" @keyup.enter="onLogin">
+	<el-form ref="loginFormRef" :model="loginForm" :rules="loginRules">
 		<div class="login-title">{{ $t('app.signIn') }}</div>
 		<el-form-item prop="mobile">
-			<el-input v-model="loginForm.mobile" :prefix-icon="User" :placeholder="$t('app.mobile')"></el-input>
+			<el-input v-model="loginForm.mobile" :prefix-icon="User" :placeholder="$t('app.mobile')" @keyup.enter="onLogin"></el-input>
 		</el-form-item>
 		<el-form-item prop="code" class="login-code">
-			<el-input v-model="loginForm.code" :placeholder="$t('app.captcha')" :prefix-icon="Key"></el-input>
+			<el-input v-model="loginForm.code" :placeholder="$t('app.captcha')" :prefix-icon="Key" @keyup.enter="onLogin"></el-input>
 			<el-button v-if="!sms.disabled" @click="sendCode">发送验证码</el-button>
 			<el-button v-else disabled>{{ sms.count }} 秒后重新发送</el-button>
 		</el-form-item>

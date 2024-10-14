@@ -71,8 +71,10 @@ export const useCrud = (options: IHooksOptions) => {
 			})
 	}
 
-	const getDataList = () => {
-		state.page = 1
+	const getDataList = (refresh?: boolean) => {
+		if (!refresh) {
+			state.page = 1
+		}
 		query()
 		console.log('getDataList')
 		console.log(state.dataList)

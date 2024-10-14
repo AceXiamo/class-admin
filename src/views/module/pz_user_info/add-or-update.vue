@@ -6,7 +6,7 @@
 				</el-form-item> -->
 			<el-form-item label="用户角色状态" prop="status">
 				<!-- <el-input v-model="dataForm.status" placeholder="用户角色状态"></el-input> -->
-				<el-select v-model="dataForm.status" :disabled="true" placeholder="请选择用户角色状态">
+				<el-select v-model="dataForm.status" :disabled="dataForm.id!=''" placeholder="请选择用户角色状态">
 					<el-option label="游客" :value="0"></el-option>
 					<!-- <el-option label="待验证" value="1"></el-option> -->
 					<el-option label="准嘉宾" :value="2"></el-option>

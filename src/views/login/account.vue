@@ -1,11 +1,11 @@
 <template>
-	<el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" @keyup.enter="onLogin">
+	<el-form ref="loginFormRef" :model="loginForm" :rules="loginRules">
 		<div class="login-title">{{ $t('app.signIn') }}</div>
 		<el-form-item prop="username">
-			<el-input v-model="loginForm.username" :prefix-icon="User" :placeholder="$t('app.username')"></el-input>
+			<el-input v-model="loginForm.username" :prefix-icon="User" :placeholder="$t('app.username')"  @keyup.enter="onLogin"></el-input>
 		</el-form-item>
 		<el-form-item prop="password">
-			<el-input v-model="loginForm.password" :prefix-icon="Lock" show-password :placeholder="$t('app.password')"></el-input>
+			<el-input v-model="loginForm.password" :prefix-icon="Lock" show-password :placeholder="$t('app.password')"  @keyup.enter="onLogin"></el-input>
 		</el-form-item>
 		<el-form-item v-if="captchaVisible" prop="captcha" class="login-captcha">
 			<el-input v-model="loginForm.captcha" :placeholder="$t('app.captcha')" :prefix-icon="Key"></el-input>
