@@ -17,6 +17,7 @@ const DialogContent = defineComponent({
 			asc: true,
 			order: 'role_index',
 			name: '',
+			account: '',
 			page: 1,
 			limit: 10
 		})
