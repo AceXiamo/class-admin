@@ -6,7 +6,7 @@
 				</el-form-item> -->
 			<el-form-item label="用户角色状态" prop="status">
 				<!-- <el-input v-model="dataForm.status" placeholder="用户角色状态"></el-input> -->
-				<el-select v-model="dataForm.status" :disabled="dataForm.id!=''" placeholder="请选择用户角色状态">
+				<el-select v-model="dataForm.status" :disabled="dataForm.id != ''" placeholder="请选择用户角色状态">
 					<el-option label="游客" :value="0"></el-option>
 					<!-- <el-option label="待验证" value="1"></el-option> -->
 					<el-option label="准嘉宾" :value="2"></el-option>
@@ -16,16 +16,25 @@
 					<el-option label="历史会员" :value="6"></el-option>
 				</el-select>
 			</el-form-item>
-			<el-form-item v-if="dataForm.status!=5" label="用户关联登录手机号" prop="account">
+			<el-form-item v-if="dataForm.status != 5" label="用户关联登录手机号" prop="account">
 				<el-input v-model="dataForm.account" placeholder="用户关联登录手机号"></el-input>
 			</el-form-item>
 			<!-- <el-form-item label="用户自定义标签" prop="tags">
 				<el-input v-model="dataForm.tags" placeholder="用户自定义标签"></el-input>
 			</el-form-item> -->
 			<el-form-item label="用户头像" prop="avatar">
-				<el-upload ref="upload" action="#" :limit="1" :auto-upload="false" :on-change="handleChange"
-					class="avatar-uploader" :before-upload="beforeAvatarUpload" :on-exceed="handleExceed" :headers="headers"
-					:show-file-list="false">
+				<el-upload
+					ref="upload"
+					action="#"
+					:limit="1"
+					:auto-upload="false"
+					:on-change="handleChange"
+					class="avatar-uploader"
+					:before-upload="beforeAvatarUpload"
+					:on-exceed="handleExceed"
+					:headers="headers"
+					:show-file-list="false"
+				>
 					<el-image v-if="imageUrl" :src="imageUrl" class="avatar" style="width: 100px; height: 100px" />
 					<el-icon v-else class="avatar-uploader-icon">
 						<Plus />
@@ -65,6 +74,15 @@
 			<el-form-item label="公司地址" prop="companyAddress">
 				<el-input v-model="dataForm.companyAddress" placeholder="公司地址"></el-input>
 			</el-form-item>
+			<el-form-item>
+				<el-button type="primary" @click="getLocation()"> 获取经纬度 </el-button>
+			</el-form-item>
+			<el-form-item label="公司经度" prop="lng">
+				<el-input-number v-model="dataForm.lng" placeholder="经度" style="width: 300px"></el-input-number>
+			</el-form-item>
+			<el-form-item label="公司纬度" prop="lat">
+				<el-input-number v-model="dataForm.lat" placeholder="纬度" style="width: 300px"></el-input-number>
+			</el-form-item>
 			<el-form-item label="主营业务" prop="bussiness">
 				<el-input v-model="dataForm.bussiness" placeholder="主营业务"></el-input>
 			</el-form-item>
@@ -80,7 +98,7 @@
 			<el-form-item label="兴趣爱好" prop="hobby">
 				<el-input v-model="dataForm.hobby" placeholder="兴趣爱好"></el-input>
 			</el-form-item>
-			<el-form-item v-if="dataForm.status!=5" label="引荐人" prop="recommenderId">
+			<el-form-item v-if="dataForm.status != 5" label="引荐人" prop="recommenderId">
 				<!-- <el-input v-model="dataForm.recommenderId" placeholder="引荐人id"></el-input> -->
 				<el-select v-model="dataForm.recommenderId" placeholder="请选择引荐人">
 					<el-option v-for="item in userInfoList" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -90,9 +108,18 @@
 				<el-input v-model="dataForm.mobile" placeholder="联系电话"></el-input>
 			</el-form-item>
 			<el-form-item label="个人微信二维码" prop="wechatQrCode">
-				<el-upload ref="upload2" action="#" :limit="1" :auto-upload="false" :on-change="handleChange2"
-					class="avatar-uploader" :before-upload="beforeAvatarUpload" :on-exceed="handleExceed2" :headers="headers"
-					:show-file-list="false">
+				<el-upload
+					ref="upload2"
+					action="#"
+					:limit="1"
+					:auto-upload="false"
+					:on-change="handleChange2"
+					class="avatar-uploader"
+					:before-upload="beforeAvatarUpload"
+					:on-exceed="handleExceed2"
+					:headers="headers"
+					:show-file-list="false"
+				>
 					<el-image v-if="imageUrl2" :src="imageUrl2" class="avatar" style="width: 100px; height: 100px" />
 					<el-icon v-else class="avatar-uploader-icon">
 						<Plus />
@@ -118,8 +145,12 @@ import { reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox, UploadInstance, UploadProps, UploadRawFile, genFileId } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { usePz_user_infoAllApi, usePz_user_infoApi, usePz_user_infoSubmitApi } from '@/api/module/pz_user_info'
-import { da } from 'element-plus/es/locale';
-import { usePz_industry_typeAllApi } from '@/api/module/pz_industry_type';
+import { da } from 'element-plus/es/locale'
+import { usePz_industry_typeAllApi } from '@/api/module/pz_industry_type'
+
+const getLocation = () => {
+	window.open('http://jingweidu.757dy.com')
+}
 
 const emit = defineEmits(['refreshDataList'])
 
@@ -150,7 +181,9 @@ const dataForm = reactive({
 	mobile: '',
 	wechatQrCode: '',
 	createTime: '',
-	updateTime: ''
+	updateTime: '',
+	lng: undefined,
+	lat: undefined
 })
 
 const init = (id?: number) => {
@@ -166,7 +199,7 @@ const init = (id?: number) => {
 		upload2.value?.clearFiles()
 		imageUrl2.value = ''
 		fileUpload2.value = null
-		userInfoList.value = [{id:0,name:'平台'}]
+		userInfoList.value = [{ id: 0, name: '平台' }]
 	}
 
 	if (id) {
@@ -187,7 +220,7 @@ const getPz_user_info = (id: number) => {
 	})
 }
 
-const userInfoList = ref([{id:0,name:'平台'}])
+const userInfoList = ref([{ id: 0, name: '平台' }])
 const getPz_userInfoList = () => {
 	usePz_user_infoAllApi().then(res => {
 		userInfoList.value = userInfoList.value.concat(res.data)
@@ -208,7 +241,7 @@ const dataRules = ref({
 	industryType: [{ required: true, message: '请选择行业类型', trigger: 'blur' }],
 	company: [{ required: true, message: '请填写公司', trigger: 'blur' }],
 	position: [{ required: true, message: '请填写职务', trigger: 'blur' }],
-	recommenderId: [{ required: true, message: '请选择引荐人', trigger: 'blur' }],
+	recommenderId: [{ required: true, message: '请选择引荐人', trigger: 'blur' }]
 })
 
 // 设置请求头
@@ -269,10 +302,10 @@ const submitHandle = () => {
 		if (!imageUrl.value) {
 			ElMessage.error('请先上传头像')
 			return
-		} else if(!imageUrl2.value){
+		} else if (!imageUrl2.value) {
 			ElMessage.error('个人微信二维码')
 			return
-		}else {
+		} else {
 			let param = new FormData()
 			if (fileUpload.value == null) {
 				let emptyBlob = new Blob([''], { type: 'application/octet-stream' })
@@ -290,7 +323,7 @@ const submitHandle = () => {
 			const blob = new Blob([jsonStr], { type: 'application/json' })
 			param.append('vo', blob)
 
-			usePz_user_infoSubmitApi(param,dataForm.id).then(() => {
+			usePz_user_infoSubmitApi(param, dataForm.id).then(() => {
 				ElMessage.success({
 					message: '操作成功',
 					duration: 500,
