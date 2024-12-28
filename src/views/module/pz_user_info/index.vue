@@ -12,11 +12,15 @@
 				<el-select v-model="state.queryForm.status" clearable placeholder="请选择用户角色状态" style="width: 200px">
 					<el-option label="游客" value="0"></el-option>
 					<!-- <el-option label="待验证" value="1"></el-option> -->
-					<el-option label="准嘉宾" value="2"></el-option>
-					<el-option label="嘉宾" value="3"></el-option>
-					<el-option label="会员" value="4"></el-option>
-					<el-option label="顾问团" value="5"></el-option>
-					<el-option label="历史会员" value="6"></el-option>
+					<el-option label="待审核" value="2"></el-option>
+					<el-option label="秘书处" value="3"></el-option>
+					<el-option label="理事" value="4"></el-option>
+					<el-option label="副会长" value="5"></el-option>
+					<el-option label="常务副会长" value="6"></el-option>
+					<el-option label="监事长" value="7"></el-option>
+					<el-option label="执行会长" value="8"></el-option>
+					<el-option label="名誉会长" value="9"></el-option>
+					<el-option label="会长" value="10"></el-option>
 				</el-select>
 			</el-form-item>
 			<el-form-item>
@@ -39,48 +43,26 @@
 			<el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
 			<!-- <el-table-column prop="id" label="" header-align="center" align="center"></el-table-column> -->
 			<el-table-column prop="name" label="用户姓名" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="status" label="用户角色状态" header-align="center" align="center">
+			<el-table-column prop="status" label="用户角色" header-align="center" align="center">
 				<template #default="{ row }">
 					<div v-if="row.status === 0">游客</div>
 					<div v-else-if="row.status === 1">待验证</div>
-					<div v-else-if="row.status === 2">准嘉宾</div>
-					<div v-else-if="row.status === 3">嘉宾</div>
-					<div v-else-if="row.status === 4">会员</div>
-					<div v-else-if="row.status === 5">顾问团</div>
-					<div v-else-if="row.status === 6">历史会员</div>
+					<div v-else-if="row.status === 2">待审核</div>
+					<div v-else-if="row.status === 3">秘书处</div>
+					<div v-else-if="row.status === 4">理事</div>
+					<div v-else-if="row.status === 5">副会长</div>
+					<div v-else-if="row.status === 6">常务副会长</div>
+					<div v-else-if="row.status === 7">监事长</div>
+					<div v-else-if="row.status === 8">执行会长</div>
+					<div v-else-if="row.status === 9">名誉会长</div>
+					<div v-else-if="row.status === 10">会长</div>
 				</template>
 			</el-table-column>
+			<el-table-column prop="position" label="其他职位" header-align="center" align="center"></el-table-column>
 			<!-- <el-table-column prop="account" label="用户关联登录手机号" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="sex" label="用户性别" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="homeplace" label="家乡" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="college" label="用户大学/年级/专业" header-align="center" align="center"></el-table-column> -->
-			<el-table-column prop="industry" label="行业" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="company" label="公司" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="position" label="职位" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="tags" label="用户自定义标签" header-align="center" align="center">
-				<template #default="{ row }">
-					<el-tag
-						v-for="(tag, index) in JSON.parse(row.tags || '[]')"
-						:key="tag"
-						closable
-						:disable-transitions="false"
-						@close="handleClose(tag, row)"
-						effect="plain"
-					>
-						{{ tag }}
-					</el-tag>
-					<el-input
-						v-if="inputVisible[row.id]"
-						ref="InputRef"
-						v-model="inputValue"
-						class="w-20"
-						size="small"
-						@keyup.enter="handleInputConfirm(row)"
-						@blur="handleInputConfirm(row)"
-					/>
-					<el-button v-else class="button-new-tag" size="small" @click="showInput(row)"> + 添加 </el-button>
-				</template>
-			</el-table-column>
 			<!-- <el-table-column prop="companyAddress" label="公司地址" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="bussiness" label="主营业务" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="advantage" label="公司优势" header-align="center" align="center"></el-table-column>
@@ -90,7 +72,7 @@
 			<el-table-column prop="recommenderId" label="引荐人id" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="mobile" label="联系电话" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="wechatQrCode" label="微信个人二维码" header-align="center" align="center"></el-table-column> -->
-			<el-table-column prop="createTime" label="创建时间" header-align="center" align="center">
+			<el-table-column prop="createTime" label="入会时间" header-align="center" align="center">
 				<template #default="{ row }">
 					{{ row.createTime ? dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss') : '' }}
 				</template>
@@ -100,11 +82,11 @@
 				<template #default="scope">
 					<el-button v-auth="'module:pz_user_info:update'" type="primary" link @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
 					<el-button v-auth="'module:pz_user_info:delete'" type="danger" link @click="deleteBatchHandle(scope.row.id)">删除</el-button>
-					<el-button type="primary" v-if="scope.row.status != 5" link @click="userRecordHandle(scope.row.id, scope.row.name)">用户记录</el-button>
+					<!--	<el-button type="primary" v-if="scope.row.status != 5" link @click="userRecordHandle(scope.row.id, scope.row.name)">用户记录</el-button>
 					<el-button type="primary" v-if="scope.row.status == 2" @click="userVerifyHandle(scope.row, 3)">通过申请</el-button>
 					<el-button type="primary" v-if="scope.row.status == 3" @click="userVerifyHandle(scope.row, 4)">升级会员</el-button>
 					<el-button type="primary" v-if="scope.row.status == 4" @click="userVerifyHandle(scope.row, 6)">转为历史会员</el-button>
-					<el-button type="primary" v-if="scope.row.status == 6" @click="userVerifyHandle(scope.row, 4)">转为会员</el-button>
+					<el-button type="primary" v-if="scope.row.status == 6" @click="userVerifyHandle(scope.row, 4)">转为会员</el-button>-->
 				</template>
 			</el-table-column>
 		</el-table>

@@ -163,7 +163,7 @@
 					<template #default="{ row }">
 						<div v-if="row.status === 0">游客</div>
 						<div v-else-if="row.status === 1">待验证</div>
-						<div v-else-if="row.status === 2">准嘉宾</div>
+						<div v-else-if="row.status === 2">待审核</div>
 						<div v-else-if="row.status === 3">嘉宾</div>
 						<div v-else-if="row.status === 4">会员</div>
 						<div v-else-if="row.status === 5">顾问团</div>

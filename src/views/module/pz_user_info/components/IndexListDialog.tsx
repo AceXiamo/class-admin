@@ -5,15 +5,20 @@ import service from '@/utils/request'
 import EditIndexDialog from './EditIndexDialog'
 
 const roles = [
-	{ label: '嘉宾', value: '3' },
-	{ label: '会员', value: '4' },
-	{ label: '顾问团', value: '5' }
+	{ label: '会长', value: 10 },
+	{ label: '名誉会长', value: 9 },
+	{ label: '执行会长', value: 8 },
+	{ label: '监事长', value: 7 },
+	{ label: '常务副会长', value: 6 },
+	{ label: '副会长', value: 5 },
+	{ label: '理事', value: 4 },
+	{ label: '秘书处', value: 3 }
 ]
 
 const DialogContent = defineComponent({
 	setup() {
 		const queryForm = ref<any>({
-			status: '3',
+			status: 10,
 			asc: true,
 			order: 'role_index',
 			name: '',
@@ -60,7 +65,7 @@ const DialogContent = defineComponent({
 				pageNum: () => queryForm.value.page,
 				pageSize: () => queryForm.value.limit
 			},
-			dataFetch: (pageNum,pageSize) => {
+			dataFetch: (pageNum, pageSize) => {
 				queryForm.value.page = pageNum
 				queryForm.value.limit = pageSize
 				loadData()
@@ -73,8 +78,14 @@ const DialogContent = defineComponent({
 					key: 'name'
 				},
 				{
-					label: '行业',
-					key: 'industry'
+					label: '用户角色',
+					render: (row: any) => {
+						return <span>{roles.find(item => item.value === row.status)?.label || '未知'}</span>
+					}
+				},
+				{
+					label: '其他职位',
+					key: 'position'
 				},
 				{
 					label: '公司',

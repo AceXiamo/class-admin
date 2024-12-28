@@ -1,7 +1,7 @@
 <template>
 	<el-card class="layout-home">
 		<view class="title">
-			<view>深大校友商会对接平台</view>
+			<view>鹏城橙乡人</view>
 		</view>
 	</el-card>
 </template>
